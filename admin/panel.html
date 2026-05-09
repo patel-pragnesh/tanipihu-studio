@@ -192,8 +192,8 @@
       </div>
       <div class="banner-grid">
         <div class="field">
-          <label for="banner-text">Banner Text</label>
-          <input id="banner-text" type="text" placeholder="Use Code WELCOME10 & Get 10% Off on Orders Above Rs 599!">
+          <label for="banner-text">Banner Text (Auto Generated)</label>
+          <input id="banner-text" type="text" readonly>
         </div>
         <div class="field">
           <label for="banner-coupon">Coupon Code</label>
@@ -409,21 +409,65 @@
     function fillMarketingBanner(data) {
       const banner = data || {};
       document.getElementById('banner-enabled').checked = Boolean(banner.enabled);
-      document.getElementById('banner-text').value = String(banner.text || '');
       document.getElementById('banner-coupon').value = String(banner.couponCode || '');
       document.getElementById('banner-discount').value = String(banner.discountText || '');
       document.getElementById('banner-min').value = banner.minOrderAmount != null ? String(banner.minOrderAmount) : '';
+      updateBannerTextPreview();
+    }
+
+    function buildBannerText(couponCode, discountText, minOrderAmount) {
+      const code = String(couponCode || '').trim();
+      const discount = String(discountText || '').trim();
+      const min = Number(minOrderAmount || 0);
+      const hasMin = Number.isFinite(min) && min > 0;
+
+      if (code && discount && hasMin) {
+        return `Use Code ${code} & Get ${discount} on Orders Above Rs ${min}!`;
+      }
+
+      if (code && discount) {
+        return `Use Code ${code} & Get ${discount}!`;
+      }
+
+      if (!code && discount && hasMin) {
+        return `Get ${discount} on Orders Above Rs ${min}!`;
+      }
+
+      if (!code && discount) {
+        return `Get ${discount}!`;
+      }
+
+      if (code && hasMin) {
+        return `Use Code ${code} on Orders Above Rs ${min}!`;
+      }
+
+      if (code) {
+        return `Use Code ${code}!`;
+      }
+
+      return '';
+    }
+
+    function updateBannerTextPreview() {
+      const couponCode = String(document.getElementById('banner-coupon').value || '').trim();
+      const discountText = String(document.getElementById('banner-discount').value || '').trim();
+      const minOrderAmount = Number(document.getElementById('banner-min').value || 0);
+      document.getElementById('banner-text').value = buildBannerText(couponCode, discountText, minOrderAmount);
     }
 
     function collectMarketingBanner() {
       const minRaw = String(document.getElementById('banner-min').value || '').trim();
       const minAmount = Number(minRaw);
+      const couponCode = String(document.getElementById('banner-coupon').value || '').trim();
+      const discountText = String(document.getElementById('banner-discount').value || '').trim();
+      const normalizedMin = minRaw && Number.isFinite(minAmount) ? minAmount : 0;
+
       return {
         enabled: Boolean(document.getElementById('banner-enabled').checked),
-        text: String(document.getElementById('banner-text').value || '').trim(),
-        couponCode: String(document.getElementById('banner-coupon').value || '').trim(),
-        discountText: String(document.getElementById('banner-discount').value || '').trim(),
-        minOrderAmount: minRaw && Number.isFinite(minAmount) ? minAmount : 0
+        text: buildBannerText(couponCode, discountText, normalizedMin),
+        couponCode,
+        discountText,
+        minOrderAmount: normalizedMin
       };
     }
 
@@ -470,6 +514,19 @@
       try {
         const overrides = collectOverrides();
         const marketingBanner = collectMarketingBanner();
+
+        const invalidOfferRows = overrides.filter((item) => {
+          if (!item.offerEnabled) return false;
+          const offer = Number(item.offerPrice);
+          const regular = Number(item.price);
+          return !Number.isFinite(offer) || offer <= 0 || offer >= regular;
+        });
+
+        if (invalidOfferRows.length > 0) {
+          const first = invalidOfferRows[0];
+          throw new Error(`Offer price must be lower than regular price for ${first.id}.`);
+        }
+
         setStatus('Saving changes…');
 
         const response = await fetch('/api/admin-save-overrides', {
@@ -495,6 +552,9 @@
     }
 
     document.getElementById('save-btn').addEventListener('click', saveAll);
+    document.getElementById('banner-coupon').addEventListener('input', updateBannerTextPreview);
+    document.getElementById('banner-discount').addEventListener('input', updateBannerTextPreview);
+    document.getElementById('banner-min').addEventListener('input', updateBannerTextPreview);
 
     document.getElementById('logout-btn').addEventListener('click', function () {
       localStorage.removeItem(SESSION_KEY);

@@ -26,11 +26,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // Fetch base products + quick overrides and merge before rendering.
+  // Fetch fresh data on each page load to avoid stale CDN/browser JSON cache.
+  const dataVersion = `?v=${Date.now()}`;
   Promise.all([
-    fetch('data/products.json').then(response => response.json()),
-    fetch('data/product-overrides.json').then(response => response.json()).catch(() => ({ overrides: [] })),
-    fetch('data/site-settings.json').then(response => response.json()).catch(() => ({}))
+    fetch(`data/products.json${dataVersion}`, { cache: 'no-store' }).then(response => response.json()),
+    fetch(`data/product-overrides.json${dataVersion}`, { cache: 'no-store' }).then(response => response.json()).catch(() => ({ overrides: [] })),
+    fetch(`data/site-settings.json${dataVersion}`, { cache: 'no-store' }).then(response => response.json()).catch(() => ({}))
   ])
     .then(([productsData, overrideData, siteSettingsData]) => {
       const sourceList = Array.isArray(productsData)
