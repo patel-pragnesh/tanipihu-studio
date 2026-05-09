@@ -1,0 +1,435 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tani Pihu Treasure - Admin Panel</title>
+  <style>
+    :root {
+      --bg: #f4f0ea;
+      --card: #ffffff;
+      --border: #d8c9bb;
+      --text: #2f2f2f;
+      --muted: #6b6b6b;
+      --green: #526c4f;
+      --green-2: #3f5440;
+      --danger: #ab2d2d;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at 10% 10%, #fff6ea 0%, var(--bg) 55%);
+      color: var(--text);
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+    }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px 14px 36px;
+    }
+
+    .topbar {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .title {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: none;
+      border-radius: 10px;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .btn-save {
+      background: var(--green);
+      color: #fff;
+    }
+
+    .btn-save:hover {
+      background: var(--green-2);
+    }
+
+    .btn-logout {
+      background: #ede6df;
+      color: #4e4e4e;
+      border: 1px solid var(--border);
+    }
+
+    .status {
+      min-height: 18px;
+      margin-bottom: 10px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 12px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .id {
+      margin: 4px 0 10px;
+      color: var(--muted);
+      font-size: 12px;
+      word-break: break-word;
+    }
+
+    .field {
+      display: grid;
+      gap: 4px;
+      margin-bottom: 8px;
+    }
+
+    .field label {
+      font-size: 12px;
+      color: #444;
+      font-weight: 700;
+    }
+
+    .field input,
+    .field select {
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 8px 10px;
+      font-size: 13px;
+      width: 100%;
+    }
+
+    .checks {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 6px;
+    }
+
+    .check {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #434343;
+      font-weight: 700;
+    }
+
+    .danger {
+      color: var(--danger);
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div>
+        <div class="title">Simple Admin Panel</div>
+        <div style="font-size:12px;color:#6b6b6b;">Edit price, offers, category, visibility. Click Save All.</div>
+      </div>
+      <div class="actions">
+        <button id="save-btn" class="btn-save">Save All Changes</button>
+        <button id="logout-btn" class="btn-logout">Logout</button>
+      </div>
+    </div>
+
+    <div id="status" class="status">Loading products…</div>
+    <div id="grid" class="grid"></div>
+  </div>
+
+  <script>
+    const SESSION_KEY = 'tpt_admin_session';
+    const CATEGORY_OPTIONS = ['eco-friendly', 'birthday', 'kids', 'return-gifts', 'candles', 'stationery', 'custom'];
+
+    const state = {
+      products: [],
+      overridesById: new Map()
+    };
+
+    function setStatus(message, type) {
+      const el = document.getElementById('status');
+      el.textContent = message;
+      if (type === 'error') {
+        el.classList.add('danger');
+      } else {
+        el.classList.remove('danger');
+      }
+    }
+
+    function getSession() {
+      try {
+        const raw = localStorage.getItem(SESSION_KEY);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        if (!parsed.expiresAt || parsed.expiresAt <= Date.now()) return null;
+        return parsed;
+      } catch {
+        return null;
+      }
+    }
+
+    function ensureSession() {
+      const session = getSession();
+      if (!session) {
+        window.location.replace('/admin/');
+        return null;
+      }
+      return session;
+    }
+
+    function toInputDateTime(value) {
+      if (!value) return '';
+      const d = new Date(value);
+      if (Number.isNaN(d.getTime())) return '';
+      const pad = (n) => String(n).padStart(2, '0');
+      return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    }
+
+    function fromInputDateTime(value) {
+      if (!value) return '';
+      const d = new Date(value);
+      if (Number.isNaN(d.getTime())) return '';
+      return d.toISOString();
+    }
+
+    function render() {
+      const grid = document.getElementById('grid');
+      grid.innerHTML = '';
+
+      const products = state.products.slice().sort((a, b) => String(a.name || '').localeCompare(String(b.name || '')));
+
+      products.forEach((product) => {
+        const existing = state.overridesById.get(product.id) || {};
+
+        const card = document.createElement('article');
+        card.className = 'card';
+        card.dataset.id = product.id;
+
+        const name = document.createElement('h3');
+        name.textContent = product.name || product.id;
+
+        const id = document.createElement('div');
+        id.className = 'id';
+        id.textContent = product.id;
+
+        const categoryField = fieldSelect('Category', CATEGORY_OPTIONS, existing.category || product.category || 'custom', 'category');
+        const priceField = fieldInput('Price (Rs)', String(existing.price ?? product.price ?? ''), 'number', 'price', { min: '0', step: '1' });
+        const offerPriceField = fieldInput('Offer Price (Rs)', String(existing.offerPrice ?? ''), 'number', 'offerPrice', { min: '0', step: '1' });
+        const offerLabelField = fieldInput('Offer Label', String(existing.offerLabel || ''), 'text', 'offerLabel');
+        const offerEndsAtField = fieldInput('Offer Ends At', toInputDateTime(existing.offerEndsAt || ''), 'datetime-local', 'offerEndsAt');
+        const imagesField = fieldInput('Images (comma separated paths)', Array.isArray(existing.images) ? existing.images.join(', ') : (Array.isArray(product.images) ? product.images.join(', ') : ''), 'text', 'images');
+
+        const checks = document.createElement('div');
+        checks.className = 'checks';
+        checks.appendChild(checkInput('Product Active', 'isActive', existing.isActive ?? product.isActive ?? true));
+        checks.appendChild(checkInput('Offer Enabled', 'offerEnabled', existing.offerEnabled ?? false));
+
+        card.appendChild(name);
+        card.appendChild(id);
+        card.appendChild(categoryField);
+        card.appendChild(priceField);
+        card.appendChild(checks);
+        card.appendChild(offerPriceField);
+        card.appendChild(offerLabelField);
+        card.appendChild(offerEndsAtField);
+        card.appendChild(imagesField);
+
+        grid.appendChild(card);
+      });
+    }
+
+    function fieldInput(label, value, type, key, attrs) {
+      const wrap = document.createElement('div');
+      wrap.className = 'field';
+
+      const l = document.createElement('label');
+      l.textContent = label;
+
+      const i = document.createElement('input');
+      i.type = type;
+      i.value = value;
+      i.dataset.key = key;
+      if (attrs) {
+        Object.keys(attrs).forEach((k) => i.setAttribute(k, attrs[k]));
+      }
+
+      wrap.appendChild(l);
+      wrap.appendChild(i);
+      return wrap;
+    }
+
+    function fieldSelect(label, options, value, key) {
+      const wrap = document.createElement('div');
+      wrap.className = 'field';
+
+      const l = document.createElement('label');
+      l.textContent = label;
+
+      const s = document.createElement('select');
+      s.dataset.key = key;
+      options.forEach((opt) => {
+        const o = document.createElement('option');
+        o.value = opt;
+        o.textContent = opt;
+        if (opt === value) o.selected = true;
+        s.appendChild(o);
+      });
+
+      wrap.appendChild(l);
+      wrap.appendChild(s);
+      return wrap;
+    }
+
+    function checkInput(label, key, checked) {
+      const wrap = document.createElement('label');
+      wrap.className = 'check';
+
+      const i = document.createElement('input');
+      i.type = 'checkbox';
+      i.checked = Boolean(checked);
+      i.dataset.key = key;
+
+      const t = document.createElement('span');
+      t.textContent = label;
+
+      wrap.appendChild(i);
+      wrap.appendChild(t);
+      return wrap;
+    }
+
+    function collectOverrides() {
+      const cards = document.querySelectorAll('.card');
+      return Array.from(cards).map((card) => {
+        const get = (key) => card.querySelector(`[data-key="${key}"]`);
+        const imagesRaw = String(get('images')?.value || '').trim();
+        const images = imagesRaw ? imagesRaw.split(',').map((x) => x.trim()).filter(Boolean) : [];
+
+        const out = {
+          id: card.dataset.id,
+          category: String(get('category')?.value || 'custom'),
+          price: Number(get('price')?.value || 0),
+          isActive: Boolean(get('isActive')?.checked),
+          offerEnabled: Boolean(get('offerEnabled')?.checked),
+          images
+        };
+
+        const offerPrice = Number(get('offerPrice')?.value || '');
+        if (Number.isFinite(offerPrice) && String(get('offerPrice')?.value || '').trim() !== '') {
+          out.offerPrice = offerPrice;
+        }
+
+        const offerLabel = String(get('offerLabel')?.value || '').trim();
+        if (offerLabel) out.offerLabel = offerLabel;
+
+        const offerEndsAt = fromInputDateTime(String(get('offerEndsAt')?.value || '').trim());
+        if (offerEndsAt) out.offerEndsAt = offerEndsAt;
+
+        return out;
+      });
+    }
+
+    async function loadData() {
+      ensureSession();
+      setStatus('Loading products…');
+      try {
+        const [productsRes, overridesRes] = await Promise.all([
+          fetch('/data/products.json', { cache: 'no-store' }),
+          fetch('/data/product-overrides.json', { cache: 'no-store' })
+        ]);
+
+        if (!productsRes.ok || !overridesRes.ok) {
+          throw new Error('Failed to fetch admin data files.');
+        }
+
+        const productsData = await productsRes.json();
+        const overridesData = await overridesRes.json();
+
+        const products = Array.isArray(productsData) ? productsData : Array.isArray(productsData.products) ? productsData.products : [];
+        const overrides = Array.isArray(overridesData.overrides) ? overridesData.overrides : [];
+
+        state.products = products;
+        state.overridesById = new Map(overrides.map((item) => [item.id, item]));
+
+        render();
+        setStatus(`Loaded ${products.length} products.`);
+      } catch (error) {
+        setStatus(error.message || 'Failed to load admin data.', 'error');
+      }
+    }
+
+    async function saveAll() {
+      const session = ensureSession();
+      if (!session) return;
+
+      const btn = document.getElementById('save-btn');
+      btn.disabled = true;
+
+      try {
+        const overrides = collectOverrides();
+        setStatus('Saving changes…');
+
+        const response = await fetch('/api/admin-save-overrides', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.token}`
+          },
+          body: JSON.stringify({ overrides })
+        });
+
+        const result = await response.json();
+        if (!response.ok || !result.success) {
+          throw new Error(result.error || 'Save failed.');
+        }
+
+        setStatus('Saved successfully. Netlify will deploy updated data in about a minute.');
+      } catch (error) {
+        setStatus(error.message || 'Failed to save changes.', 'error');
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    document.getElementById('save-btn').addEventListener('click', saveAll);
+
+    document.getElementById('logout-btn').addEventListener('click', function () {
+      localStorage.removeItem(SESSION_KEY);
+      window.location.replace('/admin/');
+    });
+
+    loadData();
+  </script>
+</body>
+</html>

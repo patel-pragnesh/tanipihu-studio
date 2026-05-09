@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tani Pihu Treasure - Admin CMS</title>
+  <title>Tani Pihu Treasure - Admin Panel</title>
   <!-- Session guard runs BEFORE Decap loads. If invalid, redirect immediately. -->
   <script>
     (function () {
@@ -21,7 +21,8 @@
 </head>
 <body>
   <div id="nc-root"></div>
-  <!-- Load after #nc-root exists to avoid appendChild on null during bootstrap. -->
-  <script src="https://unpkg.com/decap-cms@3.12.2/dist/decap-cms.js"></script>
+  <script>
+    window.location.replace('/admin/panel.html');
+  </script>
 </body>
 </html>

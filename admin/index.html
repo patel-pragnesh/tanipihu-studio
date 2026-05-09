@@ -133,7 +133,7 @@
         if (raw) {
           const parsed = JSON.parse(raw);
           if (parsed.expiresAt && parsed.expiresAt > Date.now()) {
-            window.location.replace('/admin/cms.html');
+            window.location.replace('/admin/panel.html');
           }
         }
       } catch (_) {}
@@ -175,7 +175,7 @@
         }));
 
         setStatus('Login successful. Opening admin panel\u2026', false);
-        window.location.replace('/admin/cms.html');
+        window.location.replace('/admin/panel.html');
 
       } catch (err) {
         setStatus(err.message || 'Network error. Please retry.', true);
