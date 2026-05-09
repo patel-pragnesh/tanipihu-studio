@@ -27,6 +27,29 @@
       color: #6f8667;
     }
 
+    .admin-links {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .admin-link-btn {
+      display: inline-block;
+      border: 1px solid #d1bfae;
+      border-radius: 999px;
+      padding: 6px 12px;
+      background: #fff;
+      color: #3a3b3c;
+      font-size: 13px;
+      text-decoration: none;
+    }
+
+    .admin-link-btn:hover {
+      border-color: #6f8667;
+      color: #6f8667;
+    }
+
     .otp-card {
       max-width: 460px;
       margin: 14px auto 24px;
@@ -110,6 +133,11 @@
   <div class="admin-note">
     <strong>Quick Update Guide:</strong> Open <strong>Quick Price/Category/Image Updates</strong> -> Product Quick Overrides ->
     update <strong>Category</strong>, <strong>Price</strong>, and <strong>Images</strong> -> click <strong>Publish</strong>.
+    <div class="admin-links">
+      <a class="admin-link-btn" href="#/collections/quick_updates/entries/product_quick_overrides">Open Quick Updates</a>
+      <a class="admin-link-btn" href="#/collections/product_data/entries/products">Open Full Product List</a>
+      <a class="admin-link-btn" href="#/collections/storefront_marketing/entries/site_offer_banner">Open Offer Banner Settings</a>
+    </div>
   </div>
 
   <section class="otp-card" id="otp-login-card">
@@ -157,9 +185,7 @@
       statusEl.style.color = isError ? '#b00020' : '#2f6f44';
     }
 
-    if (isSessionValid()) {
-      showCMS();
-    }
+    // Always show login form first to avoid stale-session blank screen issues.
 
     document.getElementById('admin-login-btn').addEventListener('click', async () => {
       const passcode = document.getElementById('admin-passcode').value;
