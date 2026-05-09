@@ -1,0 +1,38 @@
+backend:
+  name: github
+  repo: patel-pragnesh/tanipihu-studio # Adjust to your actual repo name
+  branch: main # Branch to update
+
+media_folder: "images" # Media files will be stored in the repo under images/
+public_folder: "https://cdn.jsdelivr.net/gh/patel-pragnesh/tanipihu-studio@main/images" # Public URL for media using jsDelivr CDN
+
+collections:
+  - name: "products"
+    label: "Products"
+    folder: "data/products" # Note: Decap CMS natively supports saving individual files in a folder, but since we use a single JSON array for all products, we might want a different approach. For a single JSON file, we use a file collection.
+    
+  - name: "product_data"
+    label: "Product Catalog (Single File)"
+    files:
+      - label: "Products JSON"
+        name: "products"
+        file: "data/products.json"
+        description: "Manage all products here"
+        fields:
+          - label: "Products"
+            name: "products"
+            widget: "list"
+            fields:
+              - {label: "ID (slug)", name: "id", widget: "string"}
+              - {label: "Name", name: "name", widget: "string"}
+              - {label: "Slug", name: "slug", widget: "string"}
+              - {label: "Price (₹)", name: "price", widget: "number"}
+              - {label: "Category", name: "category", widget: "string"}
+              - {label: "Type", name: "type", widget: "string"}
+              - {label: "Featured", name: "featured", widget: "boolean", default: false}
+              - {label: "Badge (e.g. Best Seller)", name: "badge", widget: "string", required: false}
+              - {label: "Description", name: "description", widget: "text"}
+              - {label: "Short Description", name: "shortDescription", widget: "string", required: false}
+              - {label: "Images", name: "images", widget: "list", field: {label: "Image URL", name: "image", widget: "string"}}
+              - {label: "Tags", name: "tags", widget: "list", field: {label: "Tag", name: "tag", widget: "string"}}
+              - {label: "WhatsApp Message", name: "whatsappMessage", widget: "string"}

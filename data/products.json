@@ -1,0 +1,173 @@
+[
+  {
+    "id": "plant-hamper",
+    "name": "Plant Hamper",
+    "slug": "plant-hamper",
+    "price": 249,
+    "category": "eco-friendly",
+    "type": "hamper",
+    "featured": true,
+    "badge": "Best Seller",
+    "description": "Healthy jade plant with eco-friendly jute bag and ceramic pot.",
+    "shortDescription": "Eco-friendly gifting hamper.",
+    "images": [
+      "https://cdn.jsdelivr.net/gh/patel-pragnesh/tanipihu-studio@main/WhatsApp%20Image%202026-05-09%20at%2012.38.14%20PM.jpeg"
+    ],
+    "tags": [
+      "eco",
+      "plant",
+      "green",
+      "gift"
+    ],
+    "whatsappMessage": "Hi, I want to order Plant Hamper."
+  },
+  {
+    "id": "birthday-hamper-him",
+    "name": "Birthday Hamper For Him",
+    "slug": "birthday-hamper-him",
+    "price": 999,
+    "category": "birthday",
+    "type": "hamper",
+    "featured": true,
+    "badge": "Popular",
+    "description": "Premium curated birthday hamper for him.",
+    "images": [
+      "https://cdn.jsdelivr.net/gh/patel-pragnesh/tanipihu/images/birthday-hamper-him.jpg"
+    ],
+    "tags": [
+      "birthday",
+      "men",
+      "hamper"
+    ],
+    "whatsappMessage": "Hi, I want to order Birthday Hamper For Him."
+  },
+  {
+    "id": "birthday-hamper-her-799",
+    "name": "Birthday Hamper For Her",
+    "slug": "birthday-hamper-her-799",
+    "price": 799,
+    "category": "birthday",
+    "type": "hamper",
+    "featured": true,
+    "description": "Elegant birthday gifting hamper for her.",
+    "images": [
+      "https://cdn.jsdelivr.net/gh/patel-pragnesh/tanipihu/images/birthday-hamper-her.jpg"
+    ],
+    "tags": [
+      "birthday",
+      "women",
+      "gift"
+    ],
+    "whatsappMessage": "Hi, I want to order Birthday Hamper For Her."
+  },
+  {
+    "id": "birthday-hamper-her-premium",
+    "name": "Premium Birthday Hamper For Her",
+    "slug": "birthday-hamper-her-premium",
+    "price": 1299,
+    "category": "birthday",
+    "type": "premium",
+    "featured": true,
+    "badge": "Luxury",
+    "description": "Luxury premium birthday hamper for her.",
+    "images": [
+      "https://cdn.jsdelivr.net/gh/patel-pragnesh/tanipihu/images/mothers-day.jpg"
+    ],
+    "tags": [
+      "luxury",
+      "birthday",
+      "women"
+    ],
+    "whatsappMessage": "Hi, I want to order Premium Birthday Hamper For Her."
+  },
+  {
+    "id": "kids-custom-stickers",
+    "name": "Kids Customised Stickers",
+    "slug": "kids-custom-stickers",
+    "price": 149,
+    "category": "kids",
+    "type": "stickers",
+    "description": "Custom stickers for kids with personalized names and themes.",
+    "images": [
+      "https://cdn.jsdelivr.net/gh/patel-pragnesh/tanipihu/images/kids-stickers.jpg"
+    ],
+    "tags": [
+      "kids",
+      "stickers",
+      "custom"
+    ],
+    "whatsappMessage": "Hi, I want to order Kids Customised Stickers."
+  },
+  {
+    "id": "book-stickers",
+    "name": "Book & Stationery Stickers Pack",
+    "slug": "book-stickers",
+    "price": 99,
+    "category": "stationery",
+    "type": "stickers",
+    "description": "12 book stickers and 8 stationery stickers.",
+    "images": [
+      "https://cdn.jsdelivr.net/gh/patel-pragnesh/tanipihu/images/book-stickers.jpg"
+    ],
+    "tags": [
+      "books",
+      "stationery",
+      "stickers"
+    ],
+    "whatsappMessage": "Hi, I want to order Book & Stationery Stickers Pack."
+  },
+  {
+    "id": "girls-return-gifts",
+    "name": "Girls Return Hamper",
+    "slug": "girls-return-gifts",
+    "price": 119,
+    "category": "return-gifts",
+    "type": "kids",
+    "description": "Perfect return gift hamper for birthdays and Navratri.",
+    "images": [
+      "https://cdn.jsdelivr.net/gh/patel-pragnesh/tanipihu/images/girls-return.jpg"
+    ],
+    "tags": [
+      "return-gift",
+      "girls",
+      "birthday"
+    ],
+    "whatsappMessage": "Hi, I want to order Girls Return Hamper."
+  },
+  {
+    "id": "kids-return-gifts",
+    "name": "Kids Birthday Return Gifts",
+    "slug": "kids-return-gifts",
+    "price": 79,
+    "category": "return-gifts",
+    "type": "kids",
+    "description": "Affordable and cute return gifts for kids birthday parties.",
+    "images": [
+      "https://cdn.jsdelivr.net/gh/patel-pragnesh/tanipihu/images/kids-return.jpg"
+    ],
+    "tags": [
+      "kids",
+      "birthday",
+      "return-gifts"
+    ],
+    "whatsappMessage": "Hi, I want to order Kids Birthday Return Gifts."
+  },
+  {
+    "id": "scented-candles",
+    "name": "Scented Candles",
+    "slug": "scented-candles",
+    "price": 59,
+    "category": "candles",
+    "type": "home",
+    "description": "Beautiful scented candles for return gifts and housewarming parties.",
+    "images": [
+      "https://cdn.jsdelivr.net/gh/patel-pragnesh/tanipihu/images/candles.jpg"
+    ],
+    "tags": [
+      "candles",
+      "housewarming",
+      "gift"
+    ],
+    "whatsappMessage": "Hi, I want to order Scented Candles."
+  }
+]
