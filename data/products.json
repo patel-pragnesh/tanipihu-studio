@@ -1,173 +1,262 @@
 [
   {
+    "id": "return-gifts-crochet-collection",
+    "name": "Crochet Return Gifts Collection",
+    "slug": "return-gifts-crochet-collection",
+    "price": 99,
+    "category": "return-gifts",
+    "type": "handmade",
+    "featured": true,
+    "badge": "Most Loved",
+    "description": "Thoughtful handmade crochet keychains, phone charms, and bag charms for parties and celebrations.",
+    "shortDescription": "Handmade return gifts for every celebration.",
+    "images": [
+      "images/return-gifts-crochet-collection.jpeg"
+    ],
+    "tags": [
+      "crochet",
+      "return-gifts",
+      "handmade",
+      "party"
+    ],
+    "whatsappMessage": "Hi, I want to order Crochet Return Gifts Collection."
+  },
+  {
+    "id": "birds-hamper",
+    "name": "Gift for Feathered Friends",
+    "slug": "birds-hamper",
+    "price": 499,
+    "category": "eco-friendly",
+    "type": "hamper",
+    "featured": true,
+    "badge": "Eco Pick",
+    "description": "Bird care hamper with nest house, seed bowl, and water bowl packed in a reusable jute bag.",
+    "shortDescription": "A caring bird hamper with a handmade touch.",
+    "images": [
+      "images/birds-hamper.jpeg"
+    ],
+    "tags": [
+      "birds",
+      "eco-friendly",
+      "hamper",
+      "nature"
+    ],
+    "whatsappMessage": "Hi, I want to order Gift for Feathered Friends hamper."
+  },
+  {
+    "id": "eco-bottle-hamper",
+    "name": "Eco-Friendly Bottle Hamper",
+    "slug": "eco-bottle-hamper",
+    "price": 299,
+    "category": "eco-friendly",
+    "type": "hamper",
+    "description": "Sustainable terracotta bottle hamper in eco-friendly packaging.",
+    "shortDescription": "Sip sustainably with handcrafted terracotta.",
+    "images": [
+      "images/eco-bottle-hamper.jpeg"
+    ],
+    "tags": [
+      "eco",
+      "bottle",
+      "terracotta",
+      "green"
+    ],
+    "whatsappMessage": "Hi, I want to order Eco-Friendly Bottle Hamper."
+  },
+  {
     "id": "plant-hamper",
     "name": "Plant Hamper",
     "slug": "plant-hamper",
     "price": 249,
     "category": "eco-friendly",
     "type": "hamper",
-    "featured": true,
     "badge": "Best Seller",
-    "description": "Healthy jade plant with eco-friendly jute bag and ceramic pot.",
+    "description": "Healthy jade plant with elegant ceramic pot and jute gift bag.",
     "shortDescription": "Eco-friendly gifting hamper.",
     "images": [
-      "https://cdn.jsdelivr.net/gh/patel-pragnesh/tanipihu-studio@main/WhatsApp%20Image%202026-05-09%20at%2012.38.14%20PM.jpeg"
+      "images/plant-hamper.jpeg"
     ],
     "tags": [
-      "eco",
       "plant",
+      "eco",
       "green",
       "gift"
     ],
     "whatsappMessage": "Hi, I want to order Plant Hamper."
   },
   {
-    "id": "birthday-hamper-him",
-    "name": "Birthday Hamper For Him",
-    "slug": "birthday-hamper-him",
-    "price": 999,
-    "category": "birthday",
-    "type": "hamper",
-    "featured": true,
-    "badge": "Popular",
-    "description": "Premium curated birthday hamper for him.",
-    "images": [
-      "https://cdn.jsdelivr.net/gh/patel-pragnesh/tanipihu/images/birthday-hamper-him.jpg"
-    ],
-    "tags": [
-      "birthday",
-      "men",
-      "hamper"
-    ],
-    "whatsappMessage": "Hi, I want to order Birthday Hamper For Him."
-  },
-  {
-    "id": "birthday-hamper-her-799",
-    "name": "Birthday Hamper For Her",
-    "slug": "birthday-hamper-her-799",
-    "price": 799,
-    "category": "birthday",
-    "type": "hamper",
-    "featured": true,
-    "description": "Elegant birthday gifting hamper for her.",
-    "images": [
-      "https://cdn.jsdelivr.net/gh/patel-pragnesh/tanipihu/images/birthday-hamper-her.jpg"
-    ],
-    "tags": [
-      "birthday",
-      "women",
-      "gift"
-    ],
-    "whatsappMessage": "Hi, I want to order Birthday Hamper For Her."
-  },
-  {
-    "id": "birthday-hamper-her-premium",
-    "name": "Premium Birthday Hamper For Her",
-    "slug": "birthday-hamper-her-premium",
-    "price": 1299,
-    "category": "birthday",
-    "type": "premium",
-    "featured": true,
-    "badge": "Luxury",
-    "description": "Luxury premium birthday hamper for her.",
-    "images": [
-      "https://cdn.jsdelivr.net/gh/patel-pragnesh/tanipihu/images/mothers-day.jpg"
-    ],
-    "tags": [
-      "luxury",
-      "birthday",
-      "women"
-    ],
-    "whatsappMessage": "Hi, I want to order Premium Birthday Hamper For Her."
-  },
-  {
-    "id": "kids-custom-stickers",
-    "name": "Kids Customised Stickers",
-    "slug": "kids-custom-stickers",
-    "price": 149,
-    "category": "kids",
-    "type": "stickers",
-    "description": "Custom stickers for kids with personalized names and themes.",
-    "images": [
-      "https://cdn.jsdelivr.net/gh/patel-pragnesh/tanipihu/images/kids-stickers.jpg"
-    ],
-    "tags": [
-      "kids",
-      "stickers",
-      "custom"
-    ],
-    "whatsappMessage": "Hi, I want to order Kids Customised Stickers."
-  },
-  {
-    "id": "book-stickers",
-    "name": "Book & Stationery Stickers Pack",
-    "slug": "book-stickers",
-    "price": 99,
-    "category": "stationery",
-    "type": "stickers",
-    "description": "12 book stickers and 8 stationery stickers.",
-    "images": [
-      "https://cdn.jsdelivr.net/gh/patel-pragnesh/tanipihu/images/book-stickers.jpg"
-    ],
-    "tags": [
-      "books",
-      "stationery",
-      "stickers"
-    ],
-    "whatsappMessage": "Hi, I want to order Book & Stationery Stickers Pack."
-  },
-  {
-    "id": "girls-return-gifts",
-    "name": "Girls Return Hamper",
-    "slug": "girls-return-gifts",
+    "id": "girls-navratri-hamper",
+    "name": "Girls Navratri Return Hamper",
+    "slug": "girls-navratri-hamper",
     "price": 119,
     "category": "return-gifts",
     "type": "kids",
-    "description": "Perfect return gift hamper for birthdays and Navratri.",
+    "featured": true,
+    "description": "Cute and budget-friendly girls return hamper for Navratri, Kanya Pujan, and birthday gifting.",
     "images": [
-      "https://cdn.jsdelivr.net/gh/patel-pragnesh/tanipihu/images/girls-return.jpg"
+      "images/girls-navratri-hamper.jpeg"
     ],
     "tags": [
-      "return-gift",
+      "navratri",
       "girls",
+      "return-gifts",
       "birthday"
     ],
-    "whatsappMessage": "Hi, I want to order Girls Return Hamper."
+    "whatsappMessage": "Hi, I want to order Girls Navratri Return Hamper."
   },
   {
-    "id": "kids-return-gifts",
-    "name": "Kids Birthday Return Gifts",
-    "slug": "kids-return-gifts",
-    "price": 79,
-    "category": "return-gifts",
-    "type": "kids",
-    "description": "Affordable and cute return gifts for kids birthday parties.",
+    "id": "custom-birthday-basket",
+    "name": "Custom Birthday Basket",
+    "slug": "custom-birthday-basket",
+    "price": 899,
+    "category": "birthday",
+    "type": "customized",
+    "featured": true,
+    "badge": "Personalized",
+    "description": "Birthday basket customized with name and photo for unforgettable gifting moments.",
     "images": [
-      "https://cdn.jsdelivr.net/gh/patel-pragnesh/tanipihu/images/kids-return.jpg"
+      "images/custom-birthday-basket.jpeg"
     ],
     "tags": [
-      "kids",
       "birthday",
-      "return-gifts"
+      "customized",
+      "basket",
+      "photo"
     ],
-    "whatsappMessage": "Hi, I want to order Kids Birthday Return Gifts."
+    "whatsappMessage": "Hi, I want to order a Custom Birthday Basket with name and photo customization."
   },
   {
-    "id": "scented-candles",
-    "name": "Scented Candles",
-    "slug": "scented-candles",
-    "price": 59,
-    "category": "candles",
-    "type": "home",
-    "description": "Beautiful scented candles for return gifts and housewarming parties.",
+    "id": "book-lover-hamper",
+    "name": "Book Lover Hamper",
+    "slug": "book-lover-hamper",
+    "price": 699,
+    "category": "birthday",
+    "type": "hamper",
+    "description": "Thoughtful hamper with books, bookmark, and stationery surprises for readers.",
     "images": [
-      "https://cdn.jsdelivr.net/gh/patel-pragnesh/tanipihu/images/candles.jpg"
+      "images/book-lover-hamper.jpeg"
+    ],
+    "tags": [
+      "books",
+      "hamper",
+      "stationery",
+      "gift"
+    ],
+    "whatsappMessage": "Hi, I want to order Book Lover Hamper."
+  },
+  {
+    "id": "mothers-day-hamper",
+    "name": "Mother's Day Hamper",
+    "slug": "mothers-day-hamper",
+    "price": 999,
+    "category": "birthday",
+    "type": "premium",
+    "badge": "Premium",
+    "description": "Elegant Mother's Day hamper packed with love and beautiful keepsakes.",
+    "images": [
+      "images/mothers-day-hamper.jpeg"
+    ],
+    "tags": [
+      "mothers-day",
+      "premium",
+      "hamper",
+      "women"
+    ],
+    "whatsappMessage": "Hi, I want to order Mother's Day Hamper."
+  },
+  {
+    "id": "women-selfcare-hamper",
+    "name": "Gift Hamper for Women",
+    "slug": "women-selfcare-hamper",
+    "price": 799,
+    "category": "birthday",
+    "type": "self-care",
+    "description": "Beautiful self-care and beauty essentials hamper with lovely packaging.",
+    "images": [
+      "images/women-selfcare-hamper.jpeg"
+    ],
+    "tags": [
+      "women",
+      "self-care",
+      "hamper",
+      "special-occasion"
+    ],
+    "whatsappMessage": "Hi, I want to order Gift Hamper for Women."
+  },
+  {
+    "id": "scented-candle-return-gift",
+    "name": "Cute Little Scented Candle",
+    "slug": "scented-candle-return-gift",
+    "price": 59,
+    "category": "return-gifts",
+    "type": "candles",
+    "description": "Ideal return gift candle for haldi, mehndi, birthday return favors, and festive events.",
+    "images": [
+      "images/scented-candle-return-gift.jpeg"
     ],
     "tags": [
       "candles",
-      "housewarming",
-      "gift"
+      "return-gift",
+      "haldi",
+      "birthday"
     ],
-    "whatsappMessage": "Hi, I want to order Scented Candles."
+    "whatsappMessage": "Hi, I want to order Cute Little Scented Candle return gifts."
+  },
+  {
+    "id": "mandala-painting-kit",
+    "name": "Mandala Painting Kit",
+    "slug": "mandala-painting-kit",
+    "price": 129,
+    "category": "kids",
+    "type": "diy-kit",
+    "description": "DIY mandala board painting kit with colors and brushes for creative fun.",
+    "images": [
+      "images/mandala-painting-kit.jpeg"
+    ],
+    "tags": [
+      "mandala",
+      "kids",
+      "diy",
+      "painting"
+    ],
+    "whatsappMessage": "Hi, I want to order Mandala Painting Kit."
+  },
+  {
+    "id": "diy-painting-kit",
+    "name": "DIY Painting Kit",
+    "slug": "diy-painting-kit",
+    "price": 89,
+    "category": "kids",
+    "type": "diy-kit",
+    "description": "Cute mini painting kit with paint colors and brush, great for return gifting.",
+    "images": [
+      "images/diy-painting-kit.jpeg"
+    ],
+    "tags": [
+      "diy",
+      "painting",
+      "kids",
+      "creative"
+    ],
+    "whatsappMessage": "Hi, I want to order DIY Painting Kit."
+  },
+  {
+    "id": "kids-coloring-mask-kit",
+    "name": "Kids Coloring Mask Kit",
+    "slug": "kids-coloring-mask-kit",
+    "price": 79,
+    "category": "kids",
+    "type": "activity-kit",
+    "description": "Animal face masks with sketch pens, ideal as fun return gifts for kids.",
+    "images": [
+      "images/kids-coloring-mask-kit.jpeg"
+    ],
+    "tags": [
+      "kids",
+      "coloring",
+      "mask",
+      "return-gifts"
+    ],
+    "whatsappMessage": "Hi, I want to order Kids Coloring Mask Kit."
   }
 ]

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tanipihu Gifting Studio</title>
+  <title>Tani Pihu Treasure | Handmade Gifts & Hampers</title>
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,10 +14,12 @@
 
   <!-- Navigation -->
   <header class="nav">
-    <div class="logo">Tanipihu <span>Treasures</span></div>
+    <div class="logo">Tani Pihu <span>Treasure</span></div>
     <div class="nav-links">
       <a href="#collections">Collections</a>
+      <a href="#ai-studio">AI Finder</a>
       <a href="#story">Our Story</a>
+      <a href="https://www.instagram.com/tanipihutreasures" target="_blank" rel="noopener">Instagram</a>
       <a href="#contact" class="btn-primary">Custom Gifting</a>
     </div>
   </header>
@@ -25,10 +27,88 @@
   <!-- Hero Section -->
   <section class="hero">
     <div class="hero-content">
-      <h1>Handcrafted Gifts That Feel Personal</h1>
-      <p>Eco-luxury hampers and personalized gifting curated with love for your special moments.</p>
+      <h1>Handmade Gifts That Feel Personal</h1>
+      <p>From crochet return gifts to customized hampers, every treasure is crafted with love for your special moments.</p>
       <a href="#collections" class="btn-primary">Shop Now</a>
     </div>
+  </section>
+
+  <section id="ai-studio" class="ai-studio">
+    <div class="section-header">
+      <h2>AI Gift Finder</h2>
+      <p>Tell us the occasion and budget, and get instant product suggestions.</p>
+    </div>
+
+    <div class="ai-finder-card">
+      <div class="ai-grid">
+        <label>
+          Occasion
+          <select id="ai-occasion">
+            <option value="any">Any Occasion</option>
+            <option value="birthday">Birthday</option>
+            <option value="return-gifts">Return Gifts</option>
+            <option value="kids">Kids Activity</option>
+            <option value="eco-friendly">Eco-Friendly</option>
+          </select>
+        </label>
+
+        <label>
+          Budget
+          <select id="ai-budget">
+            <option value="any">Any Budget</option>
+            <option value="under-150">Under ₹150</option>
+            <option value="150-400">₹150 - ₹400</option>
+            <option value="400-800">₹400 - ₹800</option>
+            <option value="800-plus">₹800+</option>
+          </select>
+        </label>
+
+        <label>
+          For Whom
+          <select id="ai-recipient">
+            <option value="any">Anyone</option>
+            <option value="kids">Kids</option>
+            <option value="women">Women</option>
+            <option value="family">Family</option>
+            <option value="guests">Party Guests</option>
+          </select>
+        </label>
+
+        <label>
+          Style
+          <select id="ai-vibe">
+            <option value="any">Any Style</option>
+            <option value="handmade">Handmade</option>
+            <option value="personalized">Personalized</option>
+            <option value="eco">Eco-Friendly</option>
+            <option value="budget">Budget-Friendly</option>
+          </select>
+        </label>
+
+        <label>
+          Child Age (optional)
+          <input id="ai-age" type="number" min="1" max="18" placeholder="e.g. 5">
+        </label>
+
+        <label>
+          Theme (optional)
+          <input id="ai-theme" type="text" placeholder="e.g. Unicorn, Frozen, Space">
+        </label>
+
+        <label>
+          Quantity
+          <input id="ai-qty" type="number" min="1" value="10">
+        </label>
+      </div>
+
+      <div class="ai-button-row">
+        <button id="ai-find-btn" class="btn-primary ai-btn">Find Best Gifts</button>
+        <button id="ai-package-btn" class="btn-secondary ai-btn">Generate Complete Gift Package</button>
+      </div>
+    </div>
+
+    <div id="ai-results" class="ai-results"></div>
+    <div id="ai-package-result" class="ai-package-result"></div>
   </section>
 
   <!-- Collections Filter -->
@@ -37,6 +117,17 @@
       <h2>Curated Collections</h2>
       <p>Discover our thoughtfully designed gifts.</p>
     </div>
+
+    <div class="catalog-tools">
+      <input type="search" id="search-input" placeholder="Search products, tags, or categories..." aria-label="Search products">
+      <select id="sort-select" aria-label="Sort products">
+        <option value="featured">Sort: Featured</option>
+        <option value="price-low">Price: Low to High</option>
+        <option value="price-high">Price: High to Low</option>
+        <option value="name">Name: A to Z</option>
+      </select>
+    </div>
+
     <div class="filters" id="filters">
       <button class="filter-btn active" data-filter="all">All</button>
       <button class="filter-btn" data-filter="eco-friendly">🌿 Eco Friendly</button>
@@ -54,21 +145,38 @@
   <!-- Story Section -->
   <section id="story" class="story">
     <div class="story-content">
-      <h2>Packed With Love In Every Box</h2>
-      <p>Every hamper, sticker, and candle is selected and packed by us to create a beautiful unboxing experience for your loved ones.</p>
+      <h2>Our Story</h2>
+      <p>Welcome to Tani Pihu Treasure — a little world filled with handmade love, creativity, and thoughtful gifting.</p>
+      <p>What started as a passion for creating cute and meaningful handmade pieces slowly turned into a dream to spread happiness through every order we make. From adorable crochet keychains and phone charms to customized hampers and party gifting ideas, every product is carefully handcrafted with love, patience, and attention to detail.</p>
+      <p>At Tani Pihu Treasure, we believe gifts should feel personal and memorable. Whether it is a birthday surprise, kitty party return gift, baby shower favor, festive hamper, or a small token for someone special — we create treasures that bring smiles.</p>
+      <p>Each piece is packed with care and designed to make your moments extra special. Thank you for supporting our small handmade business and being a part of our journey.</p>
     </div>
   </section>
 
   <!-- CTA Section -->
   <section id="contact" class="cta-section">
     <h2>Need custom gifting?</h2>
-    <p>We craft bespoke hampers for bulk orders, corporate gifting, and special events.</p>
-    <a href="https://wa.me/91XXXXXXXXXX" class="btn-whatsapp">Chat with us on WhatsApp</a>
+    <p>We craft bespoke hampers for birthdays, return gifts, festive celebrations, and special events.</p>
+    <a href="https://wa.me/919726571954" class="btn-whatsapp" target="_blank" rel="noopener">Chat with us on WhatsApp</a>
+    <p class="social-link">Instagram: <a href="https://www.instagram.com/tanipihutreasures" target="_blank" rel="noopener">@tanipihutreasures</a></p>
   </section>
 
   <footer class="footer">
-    <p>&copy; 2026 Tanipihu Gifting Studio. All rights reserved.</p>
+    <p>&copy; 2026 Tani Pihu Treasure. All rights reserved. | WhatsApp: +91 9726571954</p>
   </footer>
+
+  <div class="floating-actions" aria-label="Quick contact links">
+    <a href="https://wa.me/919726571954" target="_blank" rel="noopener" class="floating-btn whatsapp-float">WhatsApp</a>
+    <a href="https://www.instagram.com/tanipihutreasures" target="_blank" rel="noopener" class="floating-btn instagram-float">Instagram</a>
+  </div>
+
+  <div id="product-modal" class="product-modal" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal="true"></div>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-label="Product details">
+      <button id="modal-close-btn" class="modal-close" aria-label="Close product details">×</button>
+      <div id="modal-content"></div>
+    </div>
+  </div>
 
   <script src="js/app.js"></script>
 </body>

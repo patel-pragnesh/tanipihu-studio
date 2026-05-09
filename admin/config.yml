@@ -33,6 +33,13 @@ collections:
               - {label: "Badge (e.g. Best Seller)", name: "badge", widget: "string", required: false}
               - {label: "Description", name: "description", widget: "text"}
               - {label: "Short Description", name: "shortDescription", widget: "string", required: false}
+              - {label: "Occasion (birthday, return-gifts, kids, eco-friendly)", name: "occasion", widget: "string", required: false}
               - {label: "Images", name: "images", widget: "list", field: {label: "Image URL", name: "image", widget: "string"}}
               - {label: "Tags", name: "tags", widget: "list", field: {label: "Tag", name: "tag", widget: "string"}}
+              - {label: "Includes", name: "includes", widget: "list", required: false, field: {label: "Included Item", name: "item", widget: "string"}}
+              - {label: "Best For", name: "bestFor", widget: "list", required: false, field: {label: "Use Case", name: "useCase", widget: "string"}}
+              - {label: "Personalization Available", name: "personalizationAvailable", widget: "boolean", default: false, required: false}
+              - {label: "Lead Time Days", name: "leadTimeDays", widget: "number", required: false, value_type: "int", min: 1}
+              - {label: "Minimum Order Quantity", name: "minOrderQty", widget: "number", required: false, value_type: "int", min: 1}
+              - {label: "Quality Note", name: "qualityNote", widget: "string", required: false}
               - {label: "WhatsApp Message", name: "whatsappMessage", widget: "string"}
