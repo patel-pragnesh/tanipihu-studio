@@ -1,107 +1,133 @@
 {
   "overrides": [
     {
+      "id": "book-lover-hamper",
+      "category": "birthday",
+      "price": 11,
+      "isActive": true,
+      "offerEnabled": false,
+      "images": [
+        "images/book-lover-hamper.jpeg"
+      ]
+    },
+    {
       "id": "return-gifts-crochet-collection",
       "category": "return-gifts",
       "price": 99,
+      "isActive": true,
+      "offerEnabled": false,
       "images": [
         "images/return-gifts-crochet-collection.jpeg"
-      ]
-    },
-    {
-      "id": "birds-hamper",
-      "category": "eco-friendly",
-      "price": 499,
-      "images": [
-        "images/birds-hamper.jpeg"
-      ]
-    },
-    {
-      "id": "eco-bottle-hamper",
-      "category": "eco-friendly",
-      "price": 299,
-      "images": [
-        "images/eco-bottle-hamper.jpeg"
-      ]
-    },
-    {
-      "id": "plant-hamper",
-      "category": "eco-friendly",
-      "price": 249,
-      "images": [
-        "images/plant-hamper.jpeg"
-      ]
-    },
-    {
-      "id": "girls-navratri-hamper",
-      "category": "return-gifts",
-      "price": 119,
-      "images": [
-        "images/girls-navratri-hamper.jpeg"
       ]
     },
     {
       "id": "custom-birthday-basket",
       "category": "birthday",
       "price": 899,
+      "isActive": true,
+      "offerEnabled": false,
       "images": [
         "images/custom-birthday-basket.jpeg"
-      ]
-    },
-    {
-      "id": "book-lover-hamper",
-      "category": "birthday",
-      "price": 699,
-      "images": [
-        "images/book-lover-hamper.jpeg"
-      ]
-    },
-    {
-      "id": "mothers-day-hamper",
-      "category": "birthday",
-      "price": 999,
-      "images": [
-        "images/mothers-day-hamper.jpeg"
-      ]
-    },
-    {
-      "id": "women-selfcare-hamper",
-      "category": "birthday",
-      "price": 799,
-      "images": [
-        "images/women-selfcare-hamper.jpeg"
       ]
     },
     {
       "id": "scented-candle-return-gift",
       "category": "return-gifts",
       "price": 59,
+      "isActive": true,
+      "offerEnabled": false,
       "images": [
         "images/scented-candle-return-gift.jpeg"
-      ]
-    },
-    {
-      "id": "mandala-painting-kit",
-      "category": "kids",
-      "price": 129,
-      "images": [
-        "images/mandala-painting-kit.jpeg"
       ]
     },
     {
       "id": "diy-painting-kit",
       "category": "kids",
       "price": 89,
+      "isActive": true,
+      "offerEnabled": false,
       "images": [
         "images/diy-painting-kit.jpeg"
+      ]
+    },
+    {
+      "id": "eco-bottle-hamper",
+      "category": "eco-friendly",
+      "price": 299,
+      "isActive": true,
+      "offerEnabled": false,
+      "images": [
+        "images/eco-bottle-hamper.jpeg"
+      ]
+    },
+    {
+      "id": "birds-hamper",
+      "category": "eco-friendly",
+      "price": 499,
+      "isActive": true,
+      "offerEnabled": false,
+      "images": [
+        "images/birds-hamper.jpeg"
+      ]
+    },
+    {
+      "id": "women-selfcare-hamper",
+      "category": "birthday",
+      "price": 799,
+      "isActive": true,
+      "offerEnabled": false,
+      "images": [
+        "images/women-selfcare-hamper.jpeg"
+      ]
+    },
+    {
+      "id": "girls-navratri-hamper",
+      "category": "return-gifts",
+      "price": 119,
+      "isActive": true,
+      "offerEnabled": false,
+      "images": [
+        "images/girls-navratri-hamper.jpeg"
       ]
     },
     {
       "id": "kids-coloring-mask-kit",
       "category": "kids",
       "price": 79,
+      "isActive": true,
+      "offerEnabled": false,
       "images": [
         "images/kids-coloring-mask-kit.jpeg"
+      ]
+    },
+    {
+      "id": "mandala-painting-kit",
+      "category": "kids",
+      "price": 129,
+      "isActive": true,
+      "offerEnabled": false,
+      "images": [
+        "images/mandala-painting-kit.jpeg"
+      ]
+    },
+    {
+      "id": "mothers-day-hamper",
+      "category": "birthday",
+      "price": 999,
+      "isActive": true,
+      "offerEnabled": false,
+      "images": [
+        "images/mothers-day-hamper.jpeg"
+      ]
+    },
+    {
+      "id": "plant-hamper",
+      "category": "eco-friendly",
+      "price": 249,
+      "isActive": true,
+      "offerEnabled": false,
+      "images": [
+        "images/plant-hamper.jpeg"
       ]
     }
   ]
