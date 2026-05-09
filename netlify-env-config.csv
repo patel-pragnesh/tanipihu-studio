@@ -1,0 +1,7 @@
+key,value,required,environment,description
+ADMIN_OTP_SESSION_SECRET,replace_with_a_long_random_secret,yes,Production|Deploy Preview|Branch deploys,Secret used to sign admin session tokens
+ADMIN_LOGIN_PASSCODE,replace_with_strong_admin_code,yes,Production|Deploy Preview|Branch deploys,Primary free admin login code (no email provider needed)
+ADMIN_ALLOWED_EMAIL,owner@yourdomain.com,no,Production|Deploy Preview|Branch deploys,Optional: used only for email OTP mode
+RESEND_API_KEY,replace_with_resend_api_key,no,Production|Deploy Preview|Branch deploys,Optional: only for email OTP mode
+ADMIN_OTP_FROM_EMAIL,"Tani Pihu <noreply@yourdomain.com>",no,Production|Deploy Preview|Branch deploys,Optional: only for email OTP mode
+ADMIN_EMAIL_OTP_DEV_MODE,false,no,Deploy Preview|Branch deploys,Optional: email OTP dev shortcut only

@@ -1,6 +1,8 @@
 {
   "admin": {
+    "accessCode": "change-me-1234",
+    "authMode": "passcode",
     "allowedEmail": "admin@example.com",
-    "otpEnabled": true
+    "otpEnabled": false
   }
 }

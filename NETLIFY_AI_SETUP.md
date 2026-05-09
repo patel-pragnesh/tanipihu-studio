@@ -17,25 +17,26 @@ This project is now configured for Netlify static hosting + Netlify Functions.
    - Publish directory: `.`
 4. Deploy site.
 
-## Admin OTP login setup (Email-based)
+## Admin login setup (Free passcode mode)
 
-This project now supports admin OTP gate for `/admin`.
+This project now supports free admin access code login for `/admin` with no email provider required.
 
-Set these Netlify environment variables:
+Required Netlify environment variable:
 
-- `RESEND_API_KEY`
-- `ADMIN_OTP_FROM_EMAIL` (example: `Tani Pihu <noreply@yourdomain.com>`)
 - `ADMIN_OTP_SESSION_SECRET` (random long secret)
-- Optional override: `ADMIN_ALLOWED_EMAIL` (example: `owner@yourdomain.com`)
 
-Optional (dev only):
+Recommended Netlify environment variable:
 
-- `ADMIN_EMAIL_OTP_DEV_MODE=true` (returns OTP in API response for local testing)
+- `ADMIN_LOGIN_PASSCODE` (strong code, e.g. `MyAdmin@2026`)
 
-Allowed email can be changed in two ways:
+If `ADMIN_LOGIN_PASSCODE` is not set, fallback value is read from [data/admin-settings.json](data/admin-settings.json) -> `admin.accessCode`.
 
-1. Netlify env var `ADMIN_ALLOWED_EMAIL` (highest priority)
-2. Admin file [data/admin-settings.json](data/admin-settings.json)
+Optional email OTP mode (only if you want email-based OTP later):
+
+- `ADMIN_ALLOWED_EMAIL`
+- `RESEND_API_KEY`
+- `ADMIN_OTP_FROM_EMAIL`
+- `ADMIN_EMAIL_OTP_DEV_MODE=true` (testing only)
 
 ## Local development
 

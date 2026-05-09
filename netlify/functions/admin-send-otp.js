@@ -94,6 +94,7 @@ exports.handler = async function handler(event) {
 
   const email = isValidEmail(payload.email);
   const allowedEmail = isValidEmail(loadAllowedEmail());
+  const devMode = String(process.env.ADMIN_EMAIL_OTP_DEV_MODE || '').toLowerCase() === 'true';
 
   if (!allowedEmail) {
     return json(500, { error: 'Allowed admin email is not configured.' });
@@ -111,16 +112,16 @@ exports.handler = async function handler(event) {
   const expiresAt = Date.now() + 1000 * 60 * 10;
   const challengeToken = makeChallengeToken(email, code, expiresAt);
 
-  const sendResult = await sendEmailOtp(email, code);
-  if (!sendResult.ok) {
-    return json(500, { error: sendResult.error });
+  if (!devMode) {
+    const sendResult = await sendEmailOtp(email, code);
+    if (!sendResult.ok) {
+      return json(500, { error: sendResult.error });
+    }
   }
-
-  const devMode = String(process.env.ADMIN_EMAIL_OTP_DEV_MODE || '').toLowerCase() === 'true';
 
   return json(200, {
     success: true,
-    message: 'OTP sent successfully',
+    message: devMode ? 'OTP generated in dev mode.' : 'OTP sent successfully',
     challengeToken,
     devCode: devMode ? code : undefined
   });

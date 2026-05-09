@@ -113,22 +113,16 @@
   </div>
 
   <section class="otp-card" id="otp-login-card">
-    <h2>Admin Email OTP Login</h2>
-    <p>Only the authorized admin email can access this panel.</p>
+    <h2>Admin Access Login</h2>
+    <p>Enter your admin access code to open the panel.</p>
 
     <div class="otp-row">
-      <label for="admin-email">Admin Email</label>
-      <input id="admin-email" type="email" value="" placeholder="Enter admin email">
+      <label for="admin-passcode">Access Code</label>
+      <input id="admin-passcode" type="password" placeholder="Enter admin access code">
     </div>
 
-    <div class="otp-row">
-      <label for="admin-otp">OTP Code</label>
-      <input id="admin-otp" type="text" maxlength="8" placeholder="Enter OTP">
-    </div>
-
-    <div class="otp-actions">
-      <button id="send-otp-btn" class="btn-send">Send OTP</button>
-      <button id="verify-otp-btn" class="btn-verify">Verify OTP</button>
+    <div class="otp-actions" style="grid-template-columns: 1fr;">
+      <button id="admin-login-btn" class="btn-verify">Login</button>
     </div>
 
     <div id="otp-status" class="otp-status"></div>
@@ -138,8 +132,7 @@
 
   <!-- Include the script that builds the page and powers Decap CMS -->
   <script>
-    const SESSION_KEY = 'tpt_admin_otp_session';
-    const CHALLENGE_KEY = 'tpt_admin_otp_challenge';
+    const SESSION_KEY = 'tpt_admin_session';
 
     function isSessionValid() {
       try {
@@ -158,11 +151,6 @@
       CMS.init();
     }
 
-    function normalizeEmail(input) {
-      const email = String(input || '').trim().toLowerCase();
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? email : '';
-    }
-
     function setStatus(message, isError) {
       const statusEl = document.getElementById('otp-status');
       statusEl.textContent = message;
@@ -173,58 +161,24 @@
       showCMS();
     }
 
-    document.getElementById('send-otp-btn').addEventListener('click', async () => {
-      const email = normalizeEmail(document.getElementById('admin-email').value);
-      if (!email) {
-        setStatus('Enter a valid email address.', true);
+    document.getElementById('admin-login-btn').addEventListener('click', async () => {
+      const passcode = document.getElementById('admin-passcode').value;
+
+      if (!passcode || passcode.trim().length < 4) {
+        setStatus('Enter a valid access code.', true);
         return;
       }
 
-      setStatus('Sending OTP...', false);
-      const response = await fetch('/api/admin-send-otp', {
+      setStatus('Checking access code...', false);
+      const response = await fetch('/api/admin-login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
-      });
-
-      const result = await response.json();
-      if (!response.ok) {
-        setStatus(result.error || 'Failed to send OTP.', true);
-        return;
-      }
-
-      if (result.challengeToken) {
-        localStorage.setItem(CHALLENGE_KEY, result.challengeToken);
-      }
-
-      setStatus(result.devCode ? `OTP sent. Dev code: ${result.devCode}` : 'OTP sent successfully.', false);
-    });
-
-    document.getElementById('verify-otp-btn').addEventListener('click', async () => {
-      const email = normalizeEmail(document.getElementById('admin-email').value);
-      const code = document.getElementById('admin-otp').value.trim();
-      const challengeToken = localStorage.getItem(CHALLENGE_KEY) || '';
-
-      if (!email || !code) {
-        setStatus('Enter valid email and OTP.', true);
-        return;
-      }
-
-      if (!challengeToken) {
-        setStatus('Please click Send OTP first.', true);
-        return;
-      }
-
-      setStatus('Verifying OTP...', false);
-      const response = await fetch('/api/admin-verify-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, code, challengeToken })
+        body: JSON.stringify({ passcode: passcode.trim() })
       });
 
       const result = await response.json();
       if (!response.ok || !result.success) {
-        setStatus(result.error || 'Invalid OTP.', true);
+        setStatus(result.error || 'Invalid access code.', true);
         return;
       }
 
@@ -232,7 +186,6 @@
         token: result.token,
         expiresAt: Date.now() + Number(result.expiresInMs || 0)
       }));
-      localStorage.removeItem(CHALLENGE_KEY);
 
       setStatus('Login successful. Loading admin panel...', false);
       showCMS();

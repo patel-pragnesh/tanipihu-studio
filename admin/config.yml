@@ -28,17 +28,19 @@ collections:
   - name: "admin_security"
     label: "Admin Security Settings"
     files:
-      - label: "Admin OTP Settings"
+      - label: "Admin Access Settings"
         name: "admin_settings"
         file: "data/admin-settings.json"
-        description: "Change allowed admin email for OTP login"
+        description: "Manage free admin login access code and optional email OTP fields"
         fields:
           - label: "Admin"
             name: "admin"
             widget: "object"
             fields:
-              - {label: "Allowed Admin Email", name: "allowedEmail", widget: "string", hint: "Example: owner@yourdomain.com"}
-              - {label: "OTP Enabled", name: "otpEnabled", widget: "boolean", default: true}
+              - {label: "Auth Mode", name: "authMode", widget: "select", options: ["passcode", "email-otp"], default: "passcode", hint: "Use passcode mode for free login without email provider"}
+              - {label: "Admin Access Code", name: "accessCode", widget: "string", hint: "Used by free login mode. Example: myStrongCode@123"}
+              - {label: "Allowed Admin Email", name: "allowedEmail", widget: "string", required: false, hint: "Optional: used only in email OTP mode"}
+              - {label: "OTP Enabled", name: "otpEnabled", widget: "boolean", default: false, required: false}
 
   - name: "quick_updates"
     label: "Quick Price/Category/Image Updates"
