@@ -223,6 +223,12 @@
       overridesById: new Map(),
       marketingBanner: null
     };
+    const DATA_SOURCE = {
+      owner: 'patel-pragnesh',
+      repo: 'tanipihu-studio',
+      branch: 'main'
+    };
+    const dataVersion = `v=${Date.now()}`;
 
     function setStatus(message, type) {
       const el = document.getElementById('status');
@@ -231,6 +237,27 @@
         el.classList.add('danger');
       } else {
         el.classList.remove('danger');
+      }
+    }
+
+    function githubDataUrl(fileName) {
+      return `https://raw.githubusercontent.com/${DATA_SOURCE.owner}/${DATA_SOURCE.repo}/${DATA_SOURCE.branch}/data/${fileName}?${dataVersion}`;
+    }
+
+    async function fetchJsonWithFallback(fileName, localPath, fallbackValue) {
+      try {
+        const remoteRes = await fetch(githubDataUrl(fileName), { cache: 'no-store' });
+        if (!remoteRes.ok) {
+          throw new Error(`GitHub fetch failed for ${fileName}`);
+        }
+        return await readJsonResponseSafe(remoteRes, `Could not read ${fileName} from GitHub`);
+      } catch {
+        try {
+          const localRes = await fetch(`${localPath}?${dataVersion}`, { cache: 'no-store' });
+          return await readJsonResponseSafe(localRes, `Could not read ${fileName} from local data`);
+        } catch {
+          return fallbackValue;
+        }
       }
     }
 
@@ -471,23 +498,33 @@
       };
     }
 
+    async function readJsonResponseSafe(response, fallbackMessage) {
+      const raw = await response.text();
+      let parsed;
+
+      try {
+        parsed = raw ? JSON.parse(raw) : {};
+      } catch {
+        const preview = raw.replace(/\s+/g, ' ').trim().slice(0, 120);
+        throw new Error(`${fallbackMessage} (status ${response.status}). Non-JSON response: ${preview || 'empty response'}`);
+      }
+
+      if (!response.ok) {
+        throw new Error(parsed?.error || `${fallbackMessage} (status ${response.status}).`);
+      }
+
+      return parsed;
+    }
+
     async function loadData() {
       ensureSession();
       setStatus('Loading products…');
       try {
-        const [productsRes, overridesRes, siteRes] = await Promise.all([
-          fetch('/data/products.json', { cache: 'no-store' }),
-          fetch('/data/product-overrides.json', { cache: 'no-store' }),
-          fetch('/data/site-settings.json', { cache: 'no-store' })
+        const [productsData, overridesData, siteData] = await Promise.all([
+          fetchJsonWithFallback('products.json', '/data/products.json', { products: [] }),
+          fetchJsonWithFallback('product-overrides.json', '/data/product-overrides.json', { overrides: [] }),
+          fetchJsonWithFallback('site-settings.json', '/data/site-settings.json', {})
         ]);
-
-        if (!productsRes.ok || !overridesRes.ok || !siteRes.ok) {
-          throw new Error('Failed to fetch admin data files.');
-        }
-
-        const productsData = await productsRes.json();
-        const overridesData = await overridesRes.json();
-        const siteData = await siteRes.json();
 
         const products = Array.isArray(productsData) ? productsData : Array.isArray(productsData.products) ? productsData.products : [];
         const overrides = Array.isArray(overridesData.overrides) ? overridesData.overrides : [];
@@ -538,12 +575,12 @@
           body: JSON.stringify({ overrides, marketingBanner })
         });
 
-        const result = await response.json();
+        const result = await readJsonResponseSafe(response, 'Admin save API failed');
         if (!response.ok || !result.success) {
           throw new Error(result.error || 'Save failed.');
         }
 
-        setStatus('Saved successfully. Netlify will deploy updated data in about a minute.');
+        setStatus('Saved successfully. Git provider will trigger deployment shortly.');
       } catch (error) {
         setStatus(error.message || 'Failed to save changes.', 'error');
       } finally {

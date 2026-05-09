@@ -26,12 +26,44 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // Fetch fresh data on each page load to avoid stale CDN/browser JSON cache.
-  const dataVersion = `?v=${Date.now()}`;
+  // Read live data from GitHub first, then fall back to deployed local JSON.
+  const DATA_SOURCE = {
+    owner: 'patel-pragnesh',
+    repo: 'tanipihu-studio',
+    branch: 'main'
+  };
+  const dataVersion = `v=${Date.now()}`;
+
+  function githubDataUrl(fileName) {
+    return `https://raw.githubusercontent.com/${DATA_SOURCE.owner}/${DATA_SOURCE.repo}/${DATA_SOURCE.branch}/data/${fileName}?${dataVersion}`;
+  }
+
+  async function fetchJsonWithFallback(fileName, localPath, fallbackValue) {
+    const remoteUrl = githubDataUrl(fileName);
+
+    try {
+      const remoteResponse = await fetch(remoteUrl, { cache: 'no-store' });
+      if (!remoteResponse.ok) {
+        throw new Error(`GitHub fetch failed for ${fileName}`);
+      }
+      return await remoteResponse.json();
+    } catch {
+      try {
+        const localResponse = await fetch(`${localPath}?${dataVersion}`, { cache: 'no-store' });
+        if (!localResponse.ok) {
+          throw new Error(`Local fetch failed for ${fileName}`);
+        }
+        return await localResponse.json();
+      } catch {
+        return fallbackValue;
+      }
+    }
+  }
+
   Promise.all([
-    fetch(`data/products.json${dataVersion}`, { cache: 'no-store' }).then(response => response.json()),
-    fetch(`data/product-overrides.json${dataVersion}`, { cache: 'no-store' }).then(response => response.json()).catch(() => ({ overrides: [] })),
-    fetch(`data/site-settings.json${dataVersion}`, { cache: 'no-store' }).then(response => response.json()).catch(() => ({}))
+    fetchJsonWithFallback('products.json', 'data/products.json', { products: [] }),
+    fetchJsonWithFallback('product-overrides.json', 'data/product-overrides.json', { overrides: [] }),
+    fetchJsonWithFallback('site-settings.json', 'data/site-settings.json', {})
   ])
     .then(([productsData, overrideData, siteSettingsData]) => {
       const sourceList = Array.isArray(productsData)

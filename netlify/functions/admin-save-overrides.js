@@ -144,7 +144,7 @@ exports.handler = async function handler(event) {
   if (!githubToken) {
     return json(500, {
       error:
-        'Missing GitHub token. Set ADMIN_GITHUB_TOKEN in Netlify environment variables.'
+        'Missing GitHub token. Set ADMIN_GITHUB_TOKEN in your hosting environment variables.'
     });
   }
 
