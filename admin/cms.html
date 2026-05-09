@@ -18,8 +18,10 @@
       }
     })();
   </script>
-  <!-- Decap CMS auto-initialises itself — no CMS.init() needed -->
-  <script src="https://unpkg.com/decap-cms@3/dist/decap-cms.js"></script>
 </head>
-<body><div id="nc-root"></div></body>
+<body>
+  <div id="nc-root"></div>
+  <!-- Load after #nc-root exists to avoid appendChild on null during bootstrap. -->
+  <script src="https://unpkg.com/decap-cms@3.12.2/dist/decap-cms.js"></script>
+</body>
 </html>
