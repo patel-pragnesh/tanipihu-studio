@@ -125,9 +125,11 @@
     #cms-root {
       display: none;
     }
+
+    #nc-root {
+      display: none;
+    }
   </style>
-  <!-- Decap CMS script -->
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 </head>
 <body>
   <div class="admin-note">
@@ -157,10 +159,58 @@
   </section>
 
   <div id="cms-root"></div>
+  <div id="nc-root"></div>
 
   <!-- Include the script that builds the page and powers Decap CMS -->
   <script>
     const SESSION_KEY = 'tpt_admin_session';
+    let cmsInitialized = false;
+
+    function loadScript(url) {
+      return new Promise((resolve, reject) => {
+        const existing = document.querySelector(`script[data-cms-src="${url}"]`);
+        if (existing) {
+          if (existing.dataset.loaded === 'true') {
+            resolve();
+            return;
+          }
+          existing.addEventListener('load', () => resolve(), { once: true });
+          existing.addEventListener('error', () => reject(new Error('Script load failed')), { once: true });
+          return;
+        }
+
+        const script = document.createElement('script');
+        script.src = url;
+        script.async = true;
+        script.dataset.cmsSrc = url;
+        script.addEventListener('load', () => {
+          script.dataset.loaded = 'true';
+          resolve();
+        }, { once: true });
+        script.addEventListener('error', () => reject(new Error(`Failed to load ${url}`)), { once: true });
+        document.head.appendChild(script);
+      });
+    }
+
+    async function ensureCMSLoaded() {
+      if (window.CMS) return true;
+
+      const urls = [
+        'https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js',
+        'https://cdn.jsdelivr.net/npm/decap-cms@^3.0.0/dist/decap-cms.js'
+      ];
+
+      for (const url of urls) {
+        try {
+          await loadScript(url);
+          if (window.CMS) return true;
+        } catch {
+          // Try next CDN.
+        }
+      }
+
+      return false;
+    }
 
     function isSessionValid() {
       try {
@@ -173,10 +223,33 @@
       }
     }
 
-    function showCMS() {
-      document.getElementById('otp-login-card').style.display = 'none';
-      document.getElementById('cms-root').style.display = 'block';
-      CMS.init();
+    async function showCMS() {
+      const loginCard = document.getElementById('otp-login-card');
+      const cmsRoot = document.getElementById('cms-root');
+      const ncRoot = document.getElementById('nc-root');
+
+      if (!loginCard || !cmsRoot || !ncRoot) {
+        throw new Error('Admin UI root elements are missing.');
+      }
+
+      loginCard.style.display = 'none';
+      cmsRoot.style.display = 'block';
+      ncRoot.style.display = 'block';
+
+      const loaded = await ensureCMSLoaded();
+      if (!loaded || !window.CMS) {
+        loginCard.style.display = 'block';
+        cmsRoot.style.display = 'none';
+        ncRoot.style.display = 'none';
+        throw new Error('Could not load CMS script. Please hard refresh and try again.');
+      }
+
+      if (!cmsInitialized) {
+        window.CMS.init({
+          load_config_file: true
+        });
+        cmsInitialized = true;
+      }
     }
 
     function setStatus(message, isError) {
@@ -214,7 +287,11 @@
       }));
 
       setStatus('Login successful. Loading admin panel...', false);
-      showCMS();
+      try {
+        await showCMS();
+      } catch (error) {
+        setStatus(error.message || 'Failed to load admin CMS.', true);
+      }
     });
   </script>
 </body>
