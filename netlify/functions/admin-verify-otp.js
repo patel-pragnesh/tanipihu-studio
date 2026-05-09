@@ -10,70 +10,66 @@ function json(statusCode, body) {
   };
 }
 
-function toE164Indian(input) {
-  const digits = String(input || '').replace(/\D/g, '');
-  if (digits.length === 10) return `+91${digits}`;
-  if (digits.length === 12 && digits.startsWith('91')) return `+${digits}`;
-  if (input && String(input).startsWith('+') && digits.length >= 11) return `+${digits}`;
-  return '';
+function isValidEmail(value) {
+  const email = String(value || '').trim().toLowerCase();
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? email : '';
 }
 
-function loadAllowedPhone() {
-  if (process.env.ADMIN_ALLOWED_PHONE) {
-    return process.env.ADMIN_ALLOWED_PHONE.trim();
+function loadAllowedEmail() {
+  if (process.env.ADMIN_ALLOWED_EMAIL) {
+    return String(process.env.ADMIN_ALLOWED_EMAIL).trim().toLowerCase();
   }
 
   try {
     const filePath = path.join(__dirname, '..', '..', 'data', 'admin-settings.json');
     const raw = fs.readFileSync(filePath, 'utf8');
     const parsed = JSON.parse(raw);
-    return parsed?.admin?.allowedPhone || '+919726571954';
+    return String(parsed?.admin?.allowedEmail || '').trim().toLowerCase();
   } catch {
-    return '+919726571954';
+    return '';
   }
 }
 
-async function verifyOtp(phoneNumber, code) {
-  const accountSid = process.env.TWILIO_ACCOUNT_SID;
-  const authToken = process.env.TWILIO_AUTH_TOKEN;
-  const serviceSid = process.env.TWILIO_VERIFY_SERVICE_SID;
+function verifyChallengeToken(email, code, challengeToken) {
+  try {
+    const secret = process.env.ADMIN_OTP_SESSION_SECRET || 'change-me-in-netlify-env';
+    const decoded = Buffer.from(String(challengeToken || ''), 'base64url').toString('utf8');
+    const [tokenEmail, codeHash, expiresAtRaw, signature] = decoded.split('|');
 
-  if (!accountSid || !authToken || !serviceSid) {
-    return { ok: false, error: 'OTP provider is not configured. Set Twilio env vars in Netlify.' };
+    if (!tokenEmail || !codeHash || !expiresAtRaw || !signature) {
+      return { ok: false, error: 'Invalid challenge token.' };
+    }
+
+    const payload = `${tokenEmail}|${codeHash}|${expiresAtRaw}`;
+    const expectedSig = crypto.createHmac('sha256', secret).update(payload).digest('hex');
+    if (expectedSig !== signature) {
+      return { ok: false, error: 'Invalid challenge signature.' };
+    }
+
+    const expiresAt = Number(expiresAtRaw);
+    if (!Number.isFinite(expiresAt) || expiresAt < Date.now()) {
+      return { ok: false, error: 'OTP expired. Please request a new OTP.' };
+    }
+
+    if (tokenEmail !== email) {
+      return { ok: false, error: 'Email mismatch in OTP challenge.' };
+    }
+
+    const suppliedCodeHash = crypto.createHash('sha256').update(String(code || '')).digest('hex');
+    if (suppliedCodeHash !== codeHash) {
+      return { ok: false, error: 'Invalid OTP.' };
+    }
+
+    return { ok: true };
+  } catch {
+    return { ok: false, error: 'Invalid OTP challenge format.' };
   }
-
-  const url = `https://verify.twilio.com/v2/Services/${serviceSid}/VerificationCheck`;
-  const auth = Buffer.from(`${accountSid}:${authToken}`).toString('base64');
-  const params = new URLSearchParams();
-  params.set('To', phoneNumber);
-  params.set('Code', String(code || ''));
-
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      Authorization: `Basic ${auth}`,
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    body: params.toString()
-  });
-
-  const raw = await response.text();
-  if (!response.ok) {
-    return { ok: false, error: raw || 'OTP verification failed' };
-  }
-
-  const parsed = JSON.parse(raw);
-  if (parsed.status !== 'approved') {
-    return { ok: false, error: 'Invalid OTP' };
-  }
-
-  return { ok: true };
 }
 
-function makeSessionToken(phone) {
+function makeSessionToken(email) {
   const secret = process.env.ADMIN_OTP_SESSION_SECRET || 'change-me-in-netlify-env';
   const expiresAt = Date.now() + 1000 * 60 * 60 * 8;
-  const payload = `${phone}|${expiresAt}`;
+  const payload = `${email}|${expiresAt}`;
   const sig = crypto.createHmac('sha256', secret).update(payload).digest('hex');
   return Buffer.from(`${payload}|${sig}`).toString('base64url');
 }
@@ -90,26 +86,31 @@ exports.handler = async function handler(event) {
     return json(400, { error: 'Invalid JSON body' });
   }
 
-  const phone = toE164Indian(payload.phone);
+  const email = isValidEmail(payload.email);
   const code = String(payload.code || '').trim();
-  const allowedPhone = toE164Indian(loadAllowedPhone());
+  const challengeToken = String(payload.challengeToken || '');
+  const allowedEmail = isValidEmail(loadAllowedEmail());
 
-  if (!phone || !code) {
-    return json(400, { error: 'Phone and OTP code are required' });
+  if (!allowedEmail) {
+    return json(500, { error: 'Allowed admin email is not configured.' });
   }
 
-  if (phone !== allowedPhone) {
-    return json(403, { error: 'This mobile number is not authorized for admin access' });
+  if (!email || !code || !challengeToken) {
+    return json(400, { error: 'Email, OTP code, and challenge token are required' });
   }
 
-  const verifyResult = await verifyOtp(phone, code);
+  if (email !== allowedEmail) {
+    return json(403, { error: 'This email is not authorized for admin access' });
+  }
+
+  const verifyResult = verifyChallengeToken(email, code, challengeToken);
   if (!verifyResult.ok) {
     return json(401, { error: verifyResult.error });
   }
 
   return json(200, {
     success: true,
-    token: makeSessionToken(phone),
+    token: makeSessionToken(email),
     expiresInMs: 1000 * 60 * 60 * 8
   });
 };

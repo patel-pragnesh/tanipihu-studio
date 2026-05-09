@@ -1,6 +1,6 @@
 {
   "admin": {
-    "allowedPhone": "+919726571954",
+    "allowedEmail": "admin@example.com",
     "otpEnabled": true
   }
 }

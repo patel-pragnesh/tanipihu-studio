@@ -31,13 +31,13 @@ collections:
       - label: "Admin OTP Settings"
         name: "admin_settings"
         file: "data/admin-settings.json"
-        description: "Change allowed admin mobile number for OTP login"
+        description: "Change allowed admin email for OTP login"
         fields:
           - label: "Admin"
             name: "admin"
             widget: "object"
             fields:
-              - {label: "Allowed Admin Mobile (E.164)", name: "allowedPhone", widget: "string", hint: "Example: +919726571954"}
+              - {label: "Allowed Admin Email", name: "allowedEmail", widget: "string", hint: "Example: owner@yourdomain.com"}
               - {label: "OTP Enabled", name: "otpEnabled", widget: "boolean", default: true}
 
   - name: "quick_updates"

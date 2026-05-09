@@ -113,12 +113,12 @@
   </div>
 
   <section class="otp-card" id="otp-login-card">
-    <h2>Admin OTP Login</h2>
-    <p>Only the authorized admin mobile number can access this panel.</p>
+    <h2>Admin Email OTP Login</h2>
+    <p>Only the authorized admin email can access this panel.</p>
 
     <div class="otp-row">
-      <label for="admin-phone">Mobile Number</label>
-      <input id="admin-phone" type="tel" value="9726571954" placeholder="Enter admin number">
+      <label for="admin-email">Admin Email</label>
+      <input id="admin-email" type="email" value="" placeholder="Enter admin email">
     </div>
 
     <div class="otp-row">
@@ -139,6 +139,7 @@
   <!-- Include the script that builds the page and powers Decap CMS -->
   <script>
     const SESSION_KEY = 'tpt_admin_otp_session';
+    const CHALLENGE_KEY = 'tpt_admin_otp_challenge';
 
     function isSessionValid() {
       try {
@@ -157,12 +158,9 @@
       CMS.init();
     }
 
-    function toE164Indian(input) {
-      const digits = String(input || '').replace(/\D/g, '');
-      if (digits.length === 10) return `+91${digits}`;
-      if (digits.length === 12 && digits.startsWith('91')) return `+${digits}`;
-      if (String(input || '').startsWith('+') && digits.length >= 11) return `+${digits}`;
-      return '';
+    function normalizeEmail(input) {
+      const email = String(input || '').trim().toLowerCase();
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? email : '';
     }
 
     function setStatus(message, isError) {
@@ -176,9 +174,9 @@
     }
 
     document.getElementById('send-otp-btn').addEventListener('click', async () => {
-      const phone = toE164Indian(document.getElementById('admin-phone').value);
-      if (!phone) {
-        setStatus('Enter a valid mobile number.', true);
+      const email = normalizeEmail(document.getElementById('admin-email').value);
+      if (!email) {
+        setStatus('Enter a valid email address.', true);
         return;
       }
 
@@ -186,7 +184,7 @@
       const response = await fetch('/api/admin-send-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone })
+        body: JSON.stringify({ email })
       });
 
       const result = await response.json();
@@ -195,15 +193,25 @@
         return;
       }
 
-      setStatus('OTP sent successfully.', false);
+      if (result.challengeToken) {
+        localStorage.setItem(CHALLENGE_KEY, result.challengeToken);
+      }
+
+      setStatus(result.devCode ? `OTP sent. Dev code: ${result.devCode}` : 'OTP sent successfully.', false);
     });
 
     document.getElementById('verify-otp-btn').addEventListener('click', async () => {
-      const phone = toE164Indian(document.getElementById('admin-phone').value);
+      const email = normalizeEmail(document.getElementById('admin-email').value);
       const code = document.getElementById('admin-otp').value.trim();
+      const challengeToken = localStorage.getItem(CHALLENGE_KEY) || '';
 
-      if (!phone || !code) {
-        setStatus('Enter valid phone and OTP.', true);
+      if (!email || !code) {
+        setStatus('Enter valid email and OTP.', true);
+        return;
+      }
+
+      if (!challengeToken) {
+        setStatus('Please click Send OTP first.', true);
         return;
       }
 
@@ -211,7 +219,7 @@
       const response = await fetch('/api/admin-verify-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone, code })
+        body: JSON.stringify({ email, code, challengeToken })
       });
 
       const result = await response.json();
@@ -224,6 +232,7 @@
         token: result.token,
         expiresAt: Date.now() + Number(result.expiresInMs || 0)
       }));
+      localStorage.removeItem(CHALLENGE_KEY);
 
       setStatus('Login successful. Loading admin panel...', false);
       showCMS();
