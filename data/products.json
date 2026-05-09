@@ -1,4 +1,5 @@
-[
+{
+  "products": [
   {
     "id": "return-gifts-crochet-collection",
     "name": "Crochet Return Gifts Collection",
@@ -109,6 +110,11 @@
     "name": "Custom Birthday Basket",
     "slug": "custom-birthday-basket",
     "price": 899,
+    "isActive": true,
+    "offerEnabled": true,
+    "offerPrice": 599,
+    "offerLabel": "Offer ends soon",
+    "offerEndsAt": "2026-12-31T23:59:00+05:30",
     "category": "birthday",
     "type": "customized",
     "featured": true,
@@ -260,3 +266,5 @@
     "whatsappMessage": "Hi, I want to order Kids Coloring Mask Kit."
   }
 ]
+
+}

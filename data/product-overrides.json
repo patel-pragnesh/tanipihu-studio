@@ -1,0 +1,108 @@
+{
+  "overrides": [
+    {
+      "id": "return-gifts-crochet-collection",
+      "category": "return-gifts",
+      "price": 99,
+      "images": [
+        "images/return-gifts-crochet-collection.jpeg"
+      ]
+    },
+    {
+      "id": "birds-hamper",
+      "category": "eco-friendly",
+      "price": 499,
+      "images": [
+        "images/birds-hamper.jpeg"
+      ]
+    },
+    {
+      "id": "eco-bottle-hamper",
+      "category": "eco-friendly",
+      "price": 299,
+      "images": [
+        "images/eco-bottle-hamper.jpeg"
+      ]
+    },
+    {
+      "id": "plant-hamper",
+      "category": "eco-friendly",
+      "price": 249,
+      "images": [
+        "images/plant-hamper.jpeg"
+      ]
+    },
+    {
+      "id": "girls-navratri-hamper",
+      "category": "return-gifts",
+      "price": 119,
+      "images": [
+        "images/girls-navratri-hamper.jpeg"
+      ]
+    },
+    {
+      "id": "custom-birthday-basket",
+      "category": "birthday",
+      "price": 899,
+      "images": [
+        "images/custom-birthday-basket.jpeg"
+      ]
+    },
+    {
+      "id": "book-lover-hamper",
+      "category": "birthday",
+      "price": 699,
+      "images": [
+        "images/book-lover-hamper.jpeg"
+      ]
+    },
+    {
+      "id": "mothers-day-hamper",
+      "category": "birthday",
+      "price": 999,
+      "images": [
+        "images/mothers-day-hamper.jpeg"
+      ]
+    },
+    {
+      "id": "women-selfcare-hamper",
+      "category": "birthday",
+      "price": 799,
+      "images": [
+        "images/women-selfcare-hamper.jpeg"
+      ]
+    },
+    {
+      "id": "scented-candle-return-gift",
+      "category": "return-gifts",
+      "price": 59,
+      "images": [
+        "images/scented-candle-return-gift.jpeg"
+      ]
+    },
+    {
+      "id": "mandala-painting-kit",
+      "category": "kids",
+      "price": 129,
+      "images": [
+        "images/mandala-painting-kit.jpeg"
+      ]
+    },
+    {
+      "id": "diy-painting-kit",
+      "category": "kids",
+      "price": 89,
+      "images": [
+        "images/diy-painting-kit.jpeg"
+      ]
+    },
+    {
+      "id": "kids-coloring-mask-kit",
+      "category": "kids",
+      "price": 79,
+      "images": [
+        "images/kids-coloring-mask-kit.jpeg"
+      ]
+    }
+  ]
+}

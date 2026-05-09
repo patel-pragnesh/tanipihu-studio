@@ -17,6 +17,23 @@ This project is now configured for Netlify static hosting + Netlify Functions.
    - Publish directory: `.`
 4. Deploy site.
 
+## Admin OTP login setup
+
+This project now supports admin OTP gate for `/admin`.
+
+Set these Netlify environment variables:
+
+- `TWILIO_ACCOUNT_SID`
+- `TWILIO_AUTH_TOKEN`
+- `TWILIO_VERIFY_SERVICE_SID`
+- `ADMIN_OTP_SESSION_SECRET` (random long secret)
+- Optional override: `ADMIN_ALLOWED_PHONE` (example: `+919726571954`)
+
+Allowed number can be changed in two ways:
+
+1. Netlify env var `ADMIN_ALLOWED_PHONE` (highest priority)
+2. Admin file [data/admin-settings.json](data/admin-settings.json)
+
 ## Local development
 
 Use Netlify CLI for local function support:

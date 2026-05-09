@@ -12,7 +12,68 @@ function parseBody(event) {
 function loadProducts() {
   const filePath = path.join(__dirname, '..', '..', 'data', 'products.json');
   const raw = fs.readFileSync(filePath, 'utf8');
-  return JSON.parse(raw);
+  const parsed = JSON.parse(raw);
+  return Array.isArray(parsed) ? parsed : (Array.isArray(parsed.products) ? parsed.products : []);
+}
+
+function loadOverrides() {
+  try {
+    const filePath = path.join(__dirname, '..', '..', 'data', 'product-overrides.json');
+    const raw = fs.readFileSync(filePath, 'utf8');
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed?.overrides) ? parsed.overrides : [];
+  } catch {
+    return [];
+  }
+}
+
+function applyOverrides(products, overrides) {
+  const overrideMap = new Map(
+    overrides
+      .filter(item => item && item.id)
+      .map(item => [item.id, item])
+  );
+
+  return products.map(product => {
+    const override = overrideMap.get(product.id);
+    if (!override) return product;
+
+    const next = { ...product };
+    if (typeof override.category === 'string' && override.category.trim()) {
+      next.category = override.category.trim();
+    }
+    if (Number.isFinite(Number(override.price))) {
+      next.price = Number(override.price);
+    }
+    if (Array.isArray(override.images) && override.images.length > 0) {
+      next.images = override.images;
+    }
+    if (Object.prototype.hasOwnProperty.call(override, 'isActive')) {
+      next.isActive = Boolean(override.isActive);
+    }
+    if (Object.prototype.hasOwnProperty.call(override, 'offerEnabled')) {
+      next.offerEnabled = Boolean(override.offerEnabled);
+    }
+    if (Number.isFinite(Number(override.offerPrice))) {
+      next.offerPrice = Number(override.offerPrice);
+    }
+
+    return next;
+  });
+}
+
+function normalizeProduct(product) {
+  const regularPrice = Number(product.price || 0);
+  const offerPrice = Number(product.offerPrice);
+  const offerEnabled = Boolean(product.offerEnabled) && Number.isFinite(offerPrice) && offerPrice > 0 && offerPrice < regularPrice;
+
+  return {
+    ...product,
+    price: regularPrice,
+    finalPrice: offerEnabled ? offerPrice : regularPrice,
+    isActive: product.isActive !== false,
+    offerEnabled
+  };
 }
 
 function scoreProduct(product, criteria) {
@@ -24,10 +85,11 @@ function scoreProduct(product, criteria) {
   }
 
   if (criteria.budget && criteria.budget !== 'any') {
-    if (criteria.budget === 'under-150' && product.price <= 150) score += 3;
-    if (criteria.budget === '150-400' && product.price > 150 && product.price <= 400) score += 3;
-    if (criteria.budget === '400-800' && product.price > 400 && product.price <= 800) score += 3;
-    if (criteria.budget === '800-plus' && product.price > 800) score += 3;
+    const budgetPrice = Number(product.finalPrice || product.price || 0);
+    if (criteria.budget === 'under-150' && budgetPrice <= 150) score += 3;
+    if (criteria.budget === '150-400' && budgetPrice > 150 && budgetPrice <= 400) score += 3;
+    if (criteria.budget === '400-800' && budgetPrice > 400 && budgetPrice <= 800) score += 3;
+    if (criteria.budget === '800-plus' && budgetPrice > 800) score += 3;
   }
 
   if (criteria.theme && product.personalizationAvailable) score += 1;
@@ -43,7 +105,10 @@ exports.handler = async function handler(event) {
   }
 
   const { criteria = {}, products = [] } = parseBody(event);
-  const sourceProducts = Array.isArray(products) && products.length > 0 ? products : loadProducts();
+  const baseProducts = Array.isArray(products) && products.length > 0 ? products : loadProducts();
+  const sourceProducts = applyOverrides(baseProducts, loadOverrides())
+    .map(normalizeProduct)
+    .filter(product => product.isActive !== false);
 
   const topProducts = [...sourceProducts]
     .sort((a, b) => scoreProduct(b, criteria) - scoreProduct(a, criteria))

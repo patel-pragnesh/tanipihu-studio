@@ -7,34 +7,93 @@ media_folder: "images" # Media files will be stored in the repo under images/
 public_folder: "https://cdn.jsdelivr.net/gh/patel-pragnesh/tanipihu-studio@main/images" # Public URL for media using jsDelivr CDN
 
 collections:
-  - name: "products"
-    label: "Products"
-    folder: "data/products" # Note: Decap CMS natively supports saving individual files in a folder, but since we use a single JSON array for all products, we might want a different approach. For a single JSON file, we use a file collection.
-    
+  - name: "storefront_marketing"
+    label: "Storefront Marketing"
+    files:
+      - label: "Site Offer Banner"
+        name: "site_offer_banner"
+        file: "data/site-settings.json"
+        description: "Enable/disable top banner and manage global coupon text"
+        fields:
+          - label: "Marketing Banner"
+            name: "marketingBanner"
+            widget: "object"
+            fields:
+              - {label: "Banner Enabled", name: "enabled", widget: "boolean", default: true}
+              - {label: "Banner Text", name: "text", widget: "string", hint: "Example: Use Code WELCOME10 & Get 10% Off on Orders Above ₹599!"}
+              - {label: "Coupon Code", name: "couponCode", widget: "string", required: false}
+              - {label: "Discount Text", name: "discountText", widget: "string", required: false, hint: "Example: 10% OFF"}
+              - {label: "Minimum Order Amount (₹)", name: "minOrderAmount", widget: "number", required: false, value_type: "int", min: 0}
+
+  - name: "admin_security"
+    label: "Admin Security Settings"
+    files:
+      - label: "Admin OTP Settings"
+        name: "admin_settings"
+        file: "data/admin-settings.json"
+        description: "Change allowed admin mobile number for OTP login"
+        fields:
+          - label: "Admin"
+            name: "admin"
+            widget: "object"
+            fields:
+              - {label: "Allowed Admin Mobile (E.164)", name: "allowedPhone", widget: "string", hint: "Example: +919726571954"}
+              - {label: "OTP Enabled", name: "otpEnabled", widget: "boolean", default: true}
+
+  - name: "quick_updates"
+    label: "Quick Price/Category/Image Updates"
+    files:
+      - label: "Product Quick Overrides"
+        name: "product_quick_overrides"
+        file: "data/product-overrides.json"
+        description: "Fast edit panel: category, price, offer, visibility, and image"
+        fields:
+          - label: "Overrides"
+            name: "overrides"
+            widget: "list"
+            summary: "{{fields.id}} | Rs {{fields.price}} | {{fields.category}}"
+            fields:
+              - {label: "Product ID", name: "id", widget: "string", hint: "Keep this exactly same as product id"}
+              - {label: "Category", name: "category", widget: "select", options: ["eco-friendly", "birthday", "kids", "return-gifts", "candles", "stationery", "custom"]}
+              - {label: "Price (₹)", name: "price", widget: "number"}
+              - {label: "Product Active", name: "isActive", widget: "boolean", default: true, hint: "Turn off to hide product from storefront"}
+              - {label: "Offer Enabled", name: "offerEnabled", widget: "boolean", default: false, hint: "Turn on to apply offer price"}
+              - {label: "Offer Price (₹)", name: "offerPrice", widget: "number", required: false, hint: "Must be lower than regular price"}
+              - {label: "Offer Label", name: "offerLabel", widget: "string", required: false, hint: "Example: Offer Ends Tonight"}
+              - {label: "Offer Ends At", name: "offerEndsAt", widget: "datetime", required: false, hint: "Optional: show countdown like Offer ends in 4h"}
+              - {label: "Images", name: "images", widget: "list", hint: "First image is cover image", field: {label: "Product Image", name: "image", widget: "image"}}
+
   - name: "product_data"
-    label: "Product Catalog (Single File)"
+    label: "Product Catalog (Admin)"
     files:
       - label: "Products JSON"
         name: "products"
         file: "data/products.json"
-        description: "Manage all products here"
+        description: "Admin can update category, price, and images from this panel"
         fields:
           - label: "Products"
             name: "products"
             widget: "list"
+            summary: "{{fields.name}} | Rs {{fields.price}} | {{fields.category}}"
+            hint: "Open a product and update Category, Price, and Images, then click Publish"
             fields:
               - {label: "ID (slug)", name: "id", widget: "string"}
               - {label: "Name", name: "name", widget: "string"}
               - {label: "Slug", name: "slug", widget: "string"}
-              - {label: "Price (₹)", name: "price", widget: "number"}
-              - {label: "Category", name: "category", widget: "string"}
+              - {label: "Category", name: "category", widget: "select", options: ["eco-friendly", "birthday", "kids", "return-gifts", "candles", "stationery", "custom"], hint: "Select product category"}
+              - {label: "Price (₹)", name: "price", widget: "number", hint: "Change this to update live storefront price"}
+              - {label: "Product Active", name: "isActive", widget: "boolean", default: true, hint: "Turn off to hide this product"}
+              - {label: "Offer Enabled", name: "offerEnabled", widget: "boolean", default: false}
+              - {label: "Offer Price (₹)", name: "offerPrice", widget: "number", required: false, hint: "Offer price should be less than regular price"}
+              - {label: "Offer Label", name: "offerLabel", widget: "string", required: false, hint: "Example: Offer Ends in 6h"}
+              - {label: "Offer Ends At", name: "offerEndsAt", widget: "datetime", required: false, hint: "Optional: auto countdown text for active offer"}
+              - {label: "Images", name: "images", widget: "list", hint: "First image will be used as cover image", field: {label: "Product Image", name: "image", widget: "image"}}
               - {label: "Type", name: "type", widget: "string"}
               - {label: "Featured", name: "featured", widget: "boolean", default: false}
               - {label: "Badge (e.g. Best Seller)", name: "badge", widget: "string", required: false}
               - {label: "Description", name: "description", widget: "text"}
               - {label: "Short Description", name: "shortDescription", widget: "string", required: false}
               - {label: "Occasion (birthday, return-gifts, kids, eco-friendly)", name: "occasion", widget: "string", required: false}
-              - {label: "Images", name: "images", widget: "list", field: {label: "Image URL", name: "image", widget: "string"}}
               - {label: "Tags", name: "tags", widget: "list", field: {label: "Tag", name: "tag", widget: "string"}}
               - {label: "Includes", name: "includes", widget: "list", required: false, field: {label: "Included Item", name: "item", widget: "string"}}
               - {label: "Best For", name: "bestFor", widget: "list", required: false, field: {label: "Use Case", name: "useCase", widget: "string"}}

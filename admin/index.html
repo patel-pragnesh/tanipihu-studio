@@ -3,14 +3,231 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tanipihu Gifting Studio - Content Manager</title>
+  <title>Tani Pihu Treasure - Admin Panel</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f7f6f3;
+    }
+
+    .admin-note {
+      max-width: 980px;
+      margin: 16px auto 0;
+      background: #ffffff;
+      border: 1px solid #d1bfae;
+      border-radius: 12px;
+      padding: 12px 16px;
+      color: #3a3b3c;
+      line-height: 1.45;
+      font-size: 14px;
+    }
+
+    .admin-note strong {
+      color: #6f8667;
+    }
+
+    .otp-card {
+      max-width: 460px;
+      margin: 14px auto 24px;
+      background: #fff;
+      border: 1px solid #d1bfae;
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .otp-card h2 {
+      margin: 0 0 8px;
+      color: #3a3b3c;
+      font-size: 20px;
+    }
+
+    .otp-card p {
+      margin: 0 0 12px;
+      color: #6c6d6d;
+      font-size: 14px;
+    }
+
+    .otp-row {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .otp-row label {
+      font-size: 13px;
+      color: #3a3b3c;
+      font-weight: 600;
+    }
+
+    .otp-row input {
+      border: 1px solid #d1bfae;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 14px;
+    }
+
+    .otp-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .otp-actions button {
+      border: none;
+      border-radius: 10px;
+      padding: 10px 12px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .btn-send {
+      background: #6f8667;
+      color: #fff;
+    }
+
+    .btn-verify {
+      background: #3a3b3c;
+      color: #fff;
+    }
+
+    .otp-status {
+      margin-top: 10px;
+      min-height: 18px;
+      font-size: 13px;
+      color: #3a3b3c;
+    }
+
+    #cms-root {
+      display: none;
+    }
+  </style>
   <!-- Decap CMS script -->
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 </head>
 <body>
+  <div class="admin-note">
+    <strong>Quick Update Guide:</strong> Open <strong>Quick Price/Category/Image Updates</strong> -> Product Quick Overrides ->
+    update <strong>Category</strong>, <strong>Price</strong>, and <strong>Images</strong> -> click <strong>Publish</strong>.
+  </div>
+
+  <section class="otp-card" id="otp-login-card">
+    <h2>Admin OTP Login</h2>
+    <p>Only the authorized admin mobile number can access this panel.</p>
+
+    <div class="otp-row">
+      <label for="admin-phone">Mobile Number</label>
+      <input id="admin-phone" type="tel" value="9726571954" placeholder="Enter admin number">
+    </div>
+
+    <div class="otp-row">
+      <label for="admin-otp">OTP Code</label>
+      <input id="admin-otp" type="text" maxlength="8" placeholder="Enter OTP">
+    </div>
+
+    <div class="otp-actions">
+      <button id="send-otp-btn" class="btn-send">Send OTP</button>
+      <button id="verify-otp-btn" class="btn-verify">Verify OTP</button>
+    </div>
+
+    <div id="otp-status" class="otp-status"></div>
+  </section>
+
+  <div id="cms-root"></div>
+
   <!-- Include the script that builds the page and powers Decap CMS -->
   <script>
-    CMS.init();
+    const SESSION_KEY = 'tpt_admin_otp_session';
+
+    function isSessionValid() {
+      try {
+        const raw = localStorage.getItem(SESSION_KEY);
+        if (!raw) return false;
+        const parsed = JSON.parse(raw);
+        return parsed.expiresAt && parsed.expiresAt > Date.now();
+      } catch {
+        return false;
+      }
+    }
+
+    function showCMS() {
+      document.getElementById('otp-login-card').style.display = 'none';
+      document.getElementById('cms-root').style.display = 'block';
+      CMS.init();
+    }
+
+    function toE164Indian(input) {
+      const digits = String(input || '').replace(/\D/g, '');
+      if (digits.length === 10) return `+91${digits}`;
+      if (digits.length === 12 && digits.startsWith('91')) return `+${digits}`;
+      if (String(input || '').startsWith('+') && digits.length >= 11) return `+${digits}`;
+      return '';
+    }
+
+    function setStatus(message, isError) {
+      const statusEl = document.getElementById('otp-status');
+      statusEl.textContent = message;
+      statusEl.style.color = isError ? '#b00020' : '#2f6f44';
+    }
+
+    if (isSessionValid()) {
+      showCMS();
+    }
+
+    document.getElementById('send-otp-btn').addEventListener('click', async () => {
+      const phone = toE164Indian(document.getElementById('admin-phone').value);
+      if (!phone) {
+        setStatus('Enter a valid mobile number.', true);
+        return;
+      }
+
+      setStatus('Sending OTP...', false);
+      const response = await fetch('/api/admin-send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone })
+      });
+
+      const result = await response.json();
+      if (!response.ok) {
+        setStatus(result.error || 'Failed to send OTP.', true);
+        return;
+      }
+
+      setStatus('OTP sent successfully.', false);
+    });
+
+    document.getElementById('verify-otp-btn').addEventListener('click', async () => {
+      const phone = toE164Indian(document.getElementById('admin-phone').value);
+      const code = document.getElementById('admin-otp').value.trim();
+
+      if (!phone || !code) {
+        setStatus('Enter valid phone and OTP.', true);
+        return;
+      }
+
+      setStatus('Verifying OTP...', false);
+      const response = await fetch('/api/admin-verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone, code })
+      });
+
+      const result = await response.json();
+      if (!response.ok || !result.success) {
+        setStatus(result.error || 'Invalid OTP.', true);
+        return;
+      }
+
+      localStorage.setItem(SESSION_KEY, JSON.stringify({
+        token: result.token,
+        expiresAt: Date.now() + Number(result.expiresInMs || 0)
+      }));
+
+      setStatus('Login successful. Loading admin panel...', false);
+      showCMS();
+    });
   </script>
 </body>
 </html>

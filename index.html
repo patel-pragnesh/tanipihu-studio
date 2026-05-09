@@ -12,6 +12,8 @@
 </head>
 <body>
 
+  <div id="promo-banner" class="promo-banner is-hidden" role="status" aria-live="polite"></div>
+
   <!-- Navigation -->
   <header class="nav">
     <div class="logo">Tani Pihu <span>Treasure</span></div>
@@ -31,6 +33,56 @@
       <p>From crochet return gifts to customized hampers, every treasure is crafted with love for your special moments.</p>
       <a href="#collections" class="btn-primary">Shop Now</a>
     </div>
+  </section>
+
+  <!-- Collections Filter -->
+  <section id="collections" class="collections">
+    <div class="section-header">
+      <h2>Curated Collections</h2>
+      <p>Discover our thoughtfully designed gifts.</p>
+    </div>
+
+    <div class="catalog-tools">
+      <input type="search" id="search-input" placeholder="Search products, tags, or categories..." aria-label="Search products">
+      <select id="sort-select" aria-label="Sort products">
+        <option value="featured">Sort: Featured</option>
+        <option value="price-low">Price: Low to High</option>
+        <option value="price-high">Price: High to Low</option>
+        <option value="name">Name: A to Z</option>
+      </select>
+    </div>
+
+    <div class="filters" id="filters">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="eco-friendly">🌿 Eco Friendly</button>
+      <button class="filter-btn" data-filter="birthday">🎁 Birthday</button>
+      <button class="filter-btn" data-filter="kids">👧 Kids</button>
+      <button class="filter-btn" data-filter="return-gifts">🕯️ Return Gifts</button>
+    </div>
+    
+    <!-- Product Grid -->
+    <div class="product-grid" id="product-grid">
+      <!-- Products loaded via JS -->
+    </div>
+  </section>
+
+  <!-- Story Section -->
+  <section id="story" class="story">
+    <div class="story-content">
+      <h2>Our Story</h2>
+      <p>Welcome to Tani Pihu Treasure — a little world filled with handmade love, creativity, and thoughtful gifting.</p>
+      <p>What started as a passion for creating cute and meaningful handmade pieces slowly turned into a dream to spread happiness through every order we make. From adorable crochet keychains and phone charms to customized hampers and party gifting ideas, every product is carefully handcrafted with love, patience, and attention to detail.</p>
+      <p>At Tani Pihu Treasure, we believe gifts should feel personal and memorable. Whether it is a birthday surprise, kitty party return gift, baby shower favor, festive hamper, or a small token for someone special — we create treasures that bring smiles.</p>
+      <p>Each piece is packed with care and designed to make your moments extra special. Thank you for supporting our small handmade business and being a part of our journey.</p>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section id="contact" class="cta-section">
+    <h2>Need custom gifting?</h2>
+    <p>We craft bespoke hampers for birthdays, return gifts, festive celebrations, and special events.</p>
+    <a href="https://wa.me/919726571954" class="btn-whatsapp" target="_blank" rel="noopener">Chat with us on WhatsApp</a>
+    <p class="social-link">Instagram: <a href="https://www.instagram.com/tanipihutreasures" target="_blank" rel="noopener">@tanipihutreasures</a></p>
   </section>
 
   <section id="ai-studio" class="ai-studio">
@@ -109,56 +161,6 @@
 
     <div id="ai-results" class="ai-results"></div>
     <div id="ai-package-result" class="ai-package-result"></div>
-  </section>
-
-  <!-- Collections Filter -->
-  <section id="collections" class="collections">
-    <div class="section-header">
-      <h2>Curated Collections</h2>
-      <p>Discover our thoughtfully designed gifts.</p>
-    </div>
-
-    <div class="catalog-tools">
-      <input type="search" id="search-input" placeholder="Search products, tags, or categories..." aria-label="Search products">
-      <select id="sort-select" aria-label="Sort products">
-        <option value="featured">Sort: Featured</option>
-        <option value="price-low">Price: Low to High</option>
-        <option value="price-high">Price: High to Low</option>
-        <option value="name">Name: A to Z</option>
-      </select>
-    </div>
-
-    <div class="filters" id="filters">
-      <button class="filter-btn active" data-filter="all">All</button>
-      <button class="filter-btn" data-filter="eco-friendly">🌿 Eco Friendly</button>
-      <button class="filter-btn" data-filter="birthday">🎁 Birthday</button>
-      <button class="filter-btn" data-filter="kids">👧 Kids</button>
-      <button class="filter-btn" data-filter="return-gifts">🕯️ Return Gifts</button>
-    </div>
-    
-    <!-- Product Grid -->
-    <div class="product-grid" id="product-grid">
-      <!-- Products loaded via JS -->
-    </div>
-  </section>
-
-  <!-- Story Section -->
-  <section id="story" class="story">
-    <div class="story-content">
-      <h2>Our Story</h2>
-      <p>Welcome to Tani Pihu Treasure — a little world filled with handmade love, creativity, and thoughtful gifting.</p>
-      <p>What started as a passion for creating cute and meaningful handmade pieces slowly turned into a dream to spread happiness through every order we make. From adorable crochet keychains and phone charms to customized hampers and party gifting ideas, every product is carefully handcrafted with love, patience, and attention to detail.</p>
-      <p>At Tani Pihu Treasure, we believe gifts should feel personal and memorable. Whether it is a birthday surprise, kitty party return gift, baby shower favor, festive hamper, or a small token for someone special — we create treasures that bring smiles.</p>
-      <p>Each piece is packed with care and designed to make your moments extra special. Thank you for supporting our small handmade business and being a part of our journey.</p>
-    </div>
-  </section>
-
-  <!-- CTA Section -->
-  <section id="contact" class="cta-section">
-    <h2>Need custom gifting?</h2>
-    <p>We craft bespoke hampers for birthdays, return gifts, festive celebrations, and special events.</p>
-    <a href="https://wa.me/919726571954" class="btn-whatsapp" target="_blank" rel="noopener">Chat with us on WhatsApp</a>
-    <p class="social-link">Instagram: <a href="https://www.instagram.com/tanipihutreasures" target="_blank" rel="noopener">@tanipihutreasures</a></p>
   </section>
 
   <footer class="footer">
