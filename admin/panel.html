@@ -150,6 +150,22 @@
     .danger {
       color: var(--danger);
     }
+
+    .banner-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+      margin-bottom: 12px;
+    }
+
+    .banner-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+      margin-top: 8px;
+    }
   </style>
 </head>
 <body>
@@ -165,6 +181,35 @@
       </div>
     </div>
 
+    <section class="banner-card">
+      <h3 style="margin:0 0 4px;">Welcome Banner Offer</h3>
+      <div style="font-size:12px;color:#6b6b6b;">Enable/disable top offer banner and update coupon details.</div>
+      <div class="checks" style="margin-top:8px;">
+        <label class="check">
+          <input id="banner-enabled" type="checkbox">
+          <span>Banner Enabled</span>
+        </label>
+      </div>
+      <div class="banner-grid">
+        <div class="field">
+          <label for="banner-text">Banner Text</label>
+          <input id="banner-text" type="text" placeholder="Use Code WELCOME10 & Get 10% Off on Orders Above Rs 599!">
+        </div>
+        <div class="field">
+          <label for="banner-coupon">Coupon Code</label>
+          <input id="banner-coupon" type="text" placeholder="WELCOME10">
+        </div>
+        <div class="field">
+          <label for="banner-discount">Discount Text</label>
+          <input id="banner-discount" type="text" placeholder="10% OFF">
+        </div>
+        <div class="field">
+          <label for="banner-min">Min Order Amount (Rs)</label>
+          <input id="banner-min" type="number" min="0" step="1" placeholder="599">
+        </div>
+      </div>
+    </section>
+
     <div id="status" class="status">Loading products…</div>
     <div id="grid" class="grid"></div>
   </div>
@@ -175,7 +220,8 @@
 
     const state = {
       products: [],
-      overridesById: new Map()
+      overridesById: new Map(),
+      marketingBanner: null
     };
 
     function setStatus(message, type) {
@@ -360,28 +406,53 @@
       });
     }
 
+    function fillMarketingBanner(data) {
+      const banner = data || {};
+      document.getElementById('banner-enabled').checked = Boolean(banner.enabled);
+      document.getElementById('banner-text').value = String(banner.text || '');
+      document.getElementById('banner-coupon').value = String(banner.couponCode || '');
+      document.getElementById('banner-discount').value = String(banner.discountText || '');
+      document.getElementById('banner-min').value = banner.minOrderAmount != null ? String(banner.minOrderAmount) : '';
+    }
+
+    function collectMarketingBanner() {
+      const minRaw = String(document.getElementById('banner-min').value || '').trim();
+      const minAmount = Number(minRaw);
+      return {
+        enabled: Boolean(document.getElementById('banner-enabled').checked),
+        text: String(document.getElementById('banner-text').value || '').trim(),
+        couponCode: String(document.getElementById('banner-coupon').value || '').trim(),
+        discountText: String(document.getElementById('banner-discount').value || '').trim(),
+        minOrderAmount: minRaw && Number.isFinite(minAmount) ? minAmount : 0
+      };
+    }
+
     async function loadData() {
       ensureSession();
       setStatus('Loading products…');
       try {
-        const [productsRes, overridesRes] = await Promise.all([
+        const [productsRes, overridesRes, siteRes] = await Promise.all([
           fetch('/data/products.json', { cache: 'no-store' }),
-          fetch('/data/product-overrides.json', { cache: 'no-store' })
+          fetch('/data/product-overrides.json', { cache: 'no-store' }),
+          fetch('/data/site-settings.json', { cache: 'no-store' })
         ]);
 
-        if (!productsRes.ok || !overridesRes.ok) {
+        if (!productsRes.ok || !overridesRes.ok || !siteRes.ok) {
           throw new Error('Failed to fetch admin data files.');
         }
 
         const productsData = await productsRes.json();
         const overridesData = await overridesRes.json();
+        const siteData = await siteRes.json();
 
         const products = Array.isArray(productsData) ? productsData : Array.isArray(productsData.products) ? productsData.products : [];
         const overrides = Array.isArray(overridesData.overrides) ? overridesData.overrides : [];
 
         state.products = products;
         state.overridesById = new Map(overrides.map((item) => [item.id, item]));
+        state.marketingBanner = siteData?.marketingBanner || null;
 
+        fillMarketingBanner(state.marketingBanner);
         render();
         setStatus(`Loaded ${products.length} products.`);
       } catch (error) {
@@ -398,6 +469,7 @@
 
       try {
         const overrides = collectOverrides();
+        const marketingBanner = collectMarketingBanner();
         setStatus('Saving changes…');
 
         const response = await fetch('/api/admin-save-overrides', {
@@ -406,7 +478,7 @@
             'Content-Type': 'application/json',
             Authorization: `Bearer ${session.token}`
           },
-          body: JSON.stringify({ overrides })
+          body: JSON.stringify({ overrides, marketingBanner })
         });
 
         const result = await response.json();

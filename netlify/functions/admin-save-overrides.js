@@ -75,6 +75,17 @@ function normalizeOverride(item) {
   return normalized;
 }
 
+function normalizeMarketingBanner(item) {
+  const numericMinAmount = Number(item?.minOrderAmount);
+  return {
+    enabled: Boolean(item?.enabled),
+    text: String(item?.text || '').trim(),
+    couponCode: String(item?.couponCode || '').trim(),
+    discountText: String(item?.discountText || '').trim(),
+    minOrderAmount: Number.isFinite(numericMinAmount) ? numericMinAmount : 0
+  };
+}
+
 async function githubRequest(url, options) {
   const response = await fetch(url, options);
   const text = await response.text();
@@ -118,6 +129,7 @@ exports.handler = async function handler(event) {
   }
 
   const normalized = payload.overrides.map(normalizeOverride).filter(Boolean);
+  const normalizedBanner = normalizeMarketingBanner(payload.marketingBanner || {});
 
   const githubToken =
     process.env.ADMIN_GITHUB_TOKEN ||
@@ -126,7 +138,8 @@ exports.handler = async function handler(event) {
 
   const repo = process.env.ADMIN_GITHUB_REPO || 'patel-pragnesh/tanipihu-studio';
   const branch = process.env.ADMIN_GITHUB_BRANCH || 'main';
-  const targetPath = 'data/product-overrides.json';
+  const overridePath = 'data/product-overrides.json';
+  const siteSettingsPath = 'data/site-settings.json';
 
   if (!githubToken) {
     return json(500, {
@@ -143,27 +156,42 @@ exports.handler = async function handler(event) {
       'Content-Type': 'application/json'
     };
 
-    const getUrl = `https://api.github.com/repos/${repo}/contents/${targetPath}?ref=${encodeURIComponent(branch)}`;
-    const current = await githubRequest(getUrl, { method: 'GET', headers });
+    const currentOverride = await githubRequest(
+      `https://api.github.com/repos/${repo}/contents/${overridePath}?ref=${encodeURIComponent(branch)}`,
+      { method: 'GET', headers }
+    );
 
-    const body = {
-      message: 'admin: update product overrides',
-      content: Buffer.from(`${JSON.stringify({ overrides: normalized }, null, 2)}\n`).toString('base64'),
-      sha: current.sha,
-      branch
-    };
-
-    const putUrl = `https://api.github.com/repos/${repo}/contents/${targetPath}`;
-    const updated = await githubRequest(putUrl, {
+    const updatedOverrides = await githubRequest(`https://api.github.com/repos/${repo}/contents/${overridePath}`, {
       method: 'PUT',
       headers,
-      body: JSON.stringify(body)
+      body: JSON.stringify({
+        message: 'admin: update product overrides',
+        content: Buffer.from(`${JSON.stringify({ overrides: normalized }, null, 2)}\n`).toString('base64'),
+        sha: currentOverride.sha,
+        branch
+      })
+    });
+
+    const currentSite = await githubRequest(
+      `https://api.github.com/repos/${repo}/contents/${siteSettingsPath}?ref=${encodeURIComponent(branch)}`,
+      { method: 'GET', headers }
+    );
+
+    const updatedSite = await githubRequest(`https://api.github.com/repos/${repo}/contents/${siteSettingsPath}`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify({
+        message: 'admin: update site banner settings',
+        content: Buffer.from(`${JSON.stringify({ marketingBanner: normalizedBanner }, null, 2)}\n`).toString('base64'),
+        sha: currentSite.sha,
+        branch
+      })
     });
 
     return json(200, {
       success: true,
-      commitSha: updated?.commit?.sha || null,
-      message: 'Overrides saved successfully.'
+      commitSha: updatedSite?.commit?.sha || updatedOverrides?.commit?.sha || null,
+      message: 'Overrides and banner settings saved successfully.'
     });
   } catch (error) {
     return json(500, { error: error.message || 'Failed to save overrides.' });
