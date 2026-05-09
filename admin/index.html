@@ -3,267 +3,148 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tani Pihu Treasure - Admin Panel</title>
+  <title>Tani Pihu Treasure - Admin Login</title>
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
       background: #f7f6f3;
-    }
-
-    .admin-note {
-      max-width: 980px;
-      margin: 16px auto 0;
-      background: #ffffff;
-      border: 1px solid #d1bfae;
-      border-radius: 12px;
-      padding: 12px 16px;
-      color: #3a3b3c;
-      line-height: 1.45;
-      font-size: 14px;
-    }
-
-    .admin-note strong {
-      color: #6f8667;
-    }
-
-    .admin-links {
-      margin-top: 10px;
+      min-height: 100vh;
       display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
 
-    .admin-link-btn {
-      display: inline-block;
-      border: 1px solid #d1bfae;
-      border-radius: 999px;
-      padding: 6px 12px;
-      background: #fff;
-      color: #3a3b3c;
-      font-size: 13px;
-      text-decoration: none;
-    }
-
-    .admin-link-btn:hover {
-      border-color: #6f8667;
-      color: #6f8667;
-    }
-
-    .otp-card {
-      max-width: 460px;
-      margin: 14px auto 24px;
+    .login-card {
+      max-width: 420px;
+      width: 90%;
       background: #fff;
       border: 1px solid #d1bfae;
-      border-radius: 12px;
-      padding: 16px;
+      border-radius: 16px;
+      padding: 28px 24px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
     }
 
-    .otp-card h2 {
-      margin: 0 0 8px;
+    .login-card h2 {
+      margin: 0 0 6px;
       color: #3a3b3c;
-      font-size: 20px;
+      font-size: 22px;
     }
 
-    .otp-card p {
-      margin: 0 0 12px;
+    .login-card p {
+      margin: 0 0 18px;
       color: #6c6d6d;
       font-size: 14px;
     }
 
-    .otp-row {
+    .form-row {
       display: grid;
-      gap: 8px;
-      margin-bottom: 10px;
+      gap: 6px;
+      margin-bottom: 14px;
     }
 
-    .otp-row label {
+    .form-row label {
       font-size: 13px;
       color: #3a3b3c;
       font-weight: 600;
     }
 
-    .otp-row input {
+    .form-row input {
       border: 1px solid #d1bfae;
       border-radius: 10px;
-      padding: 10px 12px;
-      font-size: 14px;
+      padding: 11px 14px;
+      font-size: 15px;
+      outline: none;
+      transition: border-color .15s;
     }
 
-    .otp-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
+    .form-row input:focus {
+      border-color: #6f8667;
     }
 
-    .otp-actions button {
+    .login-btn {
+      width: 100%;
       border: none;
       border-radius: 10px;
-      padding: 10px 12px;
+      padding: 12px;
       cursor: pointer;
-      font-weight: 600;
-      font-size: 14px;
-    }
-
-    .btn-send {
+      font-weight: 700;
+      font-size: 15px;
       background: #6f8667;
       color: #fff;
+      transition: background .15s;
     }
 
-    .btn-verify {
-      background: #3a3b3c;
-      color: #fff;
+    .login-btn:hover:not(:disabled) {
+      background: #5a6e54;
     }
 
-    .otp-status {
-      margin-top: 10px;
+    .login-btn:disabled {
+      opacity: .6;
+      cursor: default;
+    }
+
+    .status {
+      margin-top: 12px;
       min-height: 18px;
       font-size: 13px;
       color: #3a3b3c;
+      text-align: center;
     }
 
-    #nc-root {
-      display: none;
+    .brand {
+      font-size: 13px;
+      color: #b0a090;
+      margin-top: 22px;
+      text-align: center;
     }
   </style>
 </head>
 <body>
-  <div class="admin-note">
-    <strong>Quick Update Guide:</strong> Open <strong>Quick Price/Category/Image Updates</strong> -> Product Quick Overrides ->
-    update <strong>Category</strong>, <strong>Price</strong>, and <strong>Images</strong> -> click <strong>Publish</strong>.
-    <div class="admin-links">
-      <a class="admin-link-btn" href="#/collections/quick_updates/entries/product_quick_overrides">Open Quick Updates</a>
-      <a class="admin-link-btn" href="#/collections/product_data/entries/products">Open Full Product List</a>
-      <a class="admin-link-btn" href="#/collections/storefront_marketing/entries/site_offer_banner">Open Offer Banner Settings</a>
+  <div class="login-card">
+    <h2>Admin Access</h2>
+    <p>Enter your access code to open the admin panel.</p>
+
+    <div class="form-row">
+      <label for="admin-passcode">Access Code</label>
+      <input id="admin-passcode" type="password" placeholder="Enter admin access code" autocomplete="current-password">
     </div>
+
+    <button id="login-btn" class="login-btn">Login</button>
+    <div id="status" class="status"></div>
   </div>
 
-  <section class="otp-card" id="otp-login-card">
-    <h2>Admin Access Login</h2>
-    <p>Enter your admin access code to open the panel.</p>
+  <div class="brand">Tani Pihu Treasure &mdash; Admin</div>
 
-    <div class="otp-row">
-      <label for="admin-passcode">Access Code</label>
-      <input id="admin-passcode" type="password" placeholder="Enter admin access code">
-    </div>
-
-    <div class="otp-actions" style="grid-template-columns: 1fr;">
-      <button id="admin-login-btn" class="btn-verify">Login</button>
-    </div>
-
-    <div id="otp-status" class="otp-status"></div>
-  </section>
-
-  <div id="nc-root"></div>
-
-  <!-- Include the script that builds the page and powers Decap CMS -->
   <script>
     const SESSION_KEY = 'tpt_admin_session';
-    let cmsInitialized = false;
-    let cmsInitPromise = null;
 
-    function loadScript(url) {
-      return new Promise((resolve, reject) => {
-        const existing = document.querySelector(`script[data-cms-src="${url}"]`);
-        if (existing) {
-          if (existing.dataset.loaded === 'true') {
-            resolve();
-            return;
-          }
-          existing.addEventListener('load', () => resolve(), { once: true });
-          existing.addEventListener('error', () => reject(new Error('Script load failed')), { once: true });
-          return;
-        }
-
-        const script = document.createElement('script');
-        script.src = url;
-        script.async = true;
-        script.dataset.cmsSrc = url;
-        script.addEventListener('load', () => {
-          script.dataset.loaded = 'true';
-          resolve();
-        }, { once: true });
-        script.addEventListener('error', () => reject(new Error(`Failed to load ${url}`)), { once: true });
-        document.head.appendChild(script);
-      });
+    function setStatus(msg, isError) {
+      const el = document.getElementById('status');
+      el.textContent = msg;
+      el.style.color = isError ? '#b00020' : '#2f6f44';
     }
 
-    async function ensureCMSLoaded() {
-      if (window.CMS) return true;
-
-      const urls = [
-        'https://unpkg.com/decap-cms@3/dist/decap-cms.js',
-        'https://cdn.jsdelivr.net/npm/decap-cms@3/dist/decap-cms.js'
-      ];
-
-      for (const url of urls) {
-        try {
-          await loadScript(url);
-          if (window.CMS) return true;
-        } catch {
-          // Try next CDN.
-        }
-      }
-
-      return false;
-    }
-
-    function isSessionValid() {
+    // If already logged in, go straight to CMS
+    (function () {
       try {
         const raw = localStorage.getItem(SESSION_KEY);
-        if (!raw) return false;
-        const parsed = JSON.parse(raw);
-        return parsed.expiresAt && parsed.expiresAt > Date.now();
-      } catch {
-        return false;
-      }
-    }
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed.expiresAt && parsed.expiresAt > Date.now()) {
+            window.location.replace('/admin/cms.html');
+          }
+        }
+      } catch (_) {}
+    })();
 
-    async function showCMS() {
-      const loginCard = document.getElementById('otp-login-card');
-      const ncRoot = document.getElementById('nc-root');
+    document.getElementById('admin-passcode').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') document.getElementById('login-btn').click();
+    });
 
-      if (!loginCard || !ncRoot) {
-        throw new Error('Admin UI root elements are missing.');
-      }
-
-      loginCard.style.display = 'none';
-      ncRoot.style.display = 'block';
-
-      if (cmsInitPromise) {
-        return cmsInitPromise;
-      }
-
-      cmsInitPromise = (async () => {
-      const loaded = await ensureCMSLoaded();
-      if (!loaded || !window.CMS) {
-        loginCard.style.display = 'block';
-        ncRoot.style.display = 'none';
-        cmsInitPromise = null;
-        throw new Error('Could not load CMS script. Please hard refresh and try again.');
-      }
-
-      if (!cmsInitialized) {
-        window.CMS.init({
-          load_config_file: true
-        });
-        cmsInitialized = true;
-      }
-      })();
-
-      return cmsInitPromise;
-    }
-
-    function setStatus(message, isError) {
-      const statusEl = document.getElementById('otp-status');
-      statusEl.textContent = message;
-      statusEl.style.color = isError ? '#b00020' : '#2f6f44';
-    }
-
-    // Always show login form first to avoid stale-session blank screen issues.
-
-    document.getElementById('admin-login-btn').addEventListener('click', async () => {
-      const loginBtn = document.getElementById('admin-login-btn');
+    document.getElementById('login-btn').addEventListener('click', async function () {
+      const btn = document.getElementById('login-btn');
       const passcode = document.getElementById('admin-passcode').value;
 
       if (!passcode || passcode.trim().length < 4) {
@@ -271,8 +152,9 @@
         return;
       }
 
-      loginBtn.disabled = true;
-      setStatus('Checking access code...', false);
+      btn.disabled = true;
+      setStatus('Checking access code\u2026', false);
+
       try {
         const response = await fetch('/api/admin-login', {
           method: 'POST',
@@ -281,6 +163,7 @@
         });
 
         const result = await response.json();
+
         if (!response.ok || !result.success) {
           setStatus(result.error || 'Invalid access code.', true);
           return;
@@ -291,12 +174,13 @@
           expiresAt: Date.now() + Number(result.expiresInMs || 0)
         }));
 
-        setStatus('Login successful. Loading admin panel...', false);
-        await showCMS();
-      } catch (error) {
-        setStatus(error.message || 'Failed to load admin CMS.', true);
+        setStatus('Login successful. Opening admin panel\u2026', false);
+        window.location.replace('/admin/cms.html');
+
+      } catch (err) {
+        setStatus(err.message || 'Network error. Please retry.', true);
       } finally {
-        loginBtn.disabled = false;
+        btn.disabled = false;
       }
     });
   </script>
