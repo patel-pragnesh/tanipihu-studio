@@ -4,33 +4,22 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tani Pihu Treasure - Admin CMS</title>
-  <!-- Decap CMS loaded immediately in head — no hidden-div trick -->
+  <!-- Session guard runs BEFORE Decap loads. If invalid, redirect immediately. -->
+  <script>
+    (function () {
+      try {
+        var raw = localStorage.getItem('tpt_admin_session');
+        var parsed = raw ? JSON.parse(raw) : null;
+        if (!parsed || !parsed.expiresAt || parsed.expiresAt <= Date.now()) {
+          window.location.replace('/admin/');
+        }
+      } catch (e) {
+        window.location.replace('/admin/');
+      }
+    })();
+  </script>
+  <!-- Decap CMS auto-initialises itself — no CMS.init() needed -->
   <script src="https://unpkg.com/decap-cms@3/dist/decap-cms.js"></script>
 </head>
-<body>
-  <script>
-    const SESSION_KEY = 'tpt_admin_session';
-
-    function isSessionValid() {
-      try {
-        const raw = localStorage.getItem(SESSION_KEY);
-        if (!raw) return false;
-        const parsed = JSON.parse(raw);
-        return parsed.expiresAt && parsed.expiresAt > Date.now();
-      } catch {
-        return false;
-      }
-    }
-
-    if (!isSessionValid()) {
-      window.location.replace('/admin/');
-    } else {
-      window.addEventListener('DOMContentLoaded', function () {
-        if (window.CMS) {
-          window.CMS.init({ load_config_file: true });
-        }
-      });
-    }
-  </script>
-</body>
+<body></body>
 </html>
