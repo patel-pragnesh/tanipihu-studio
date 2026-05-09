@@ -122,10 +122,6 @@
       color: #3a3b3c;
     }
 
-    #cms-root {
-      display: none;
-    }
-
     #nc-root {
       display: none;
     }
@@ -158,13 +154,13 @@
     <div id="otp-status" class="otp-status"></div>
   </section>
 
-  <div id="cms-root"></div>
   <div id="nc-root"></div>
 
   <!-- Include the script that builds the page and powers Decap CMS -->
   <script>
     const SESSION_KEY = 'tpt_admin_session';
     let cmsInitialized = false;
+    let cmsInitPromise = null;
 
     function loadScript(url) {
       return new Promise((resolve, reject) => {
@@ -196,8 +192,8 @@
       if (window.CMS) return true;
 
       const urls = [
-        'https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js',
-        'https://cdn.jsdelivr.net/npm/decap-cms@^3.0.0/dist/decap-cms.js'
+        'https://unpkg.com/decap-cms@3/dist/decap-cms.js',
+        'https://cdn.jsdelivr.net/npm/decap-cms@3/dist/decap-cms.js'
       ];
 
       for (const url of urls) {
@@ -225,22 +221,25 @@
 
     async function showCMS() {
       const loginCard = document.getElementById('otp-login-card');
-      const cmsRoot = document.getElementById('cms-root');
       const ncRoot = document.getElementById('nc-root');
 
-      if (!loginCard || !cmsRoot || !ncRoot) {
+      if (!loginCard || !ncRoot) {
         throw new Error('Admin UI root elements are missing.');
       }
 
       loginCard.style.display = 'none';
-      cmsRoot.style.display = 'block';
       ncRoot.style.display = 'block';
 
+      if (cmsInitPromise) {
+        return cmsInitPromise;
+      }
+
+      cmsInitPromise = (async () => {
       const loaded = await ensureCMSLoaded();
       if (!loaded || !window.CMS) {
         loginCard.style.display = 'block';
-        cmsRoot.style.display = 'none';
         ncRoot.style.display = 'none';
+        cmsInitPromise = null;
         throw new Error('Could not load CMS script. Please hard refresh and try again.');
       }
 
@@ -250,6 +249,9 @@
         });
         cmsInitialized = true;
       }
+      })();
+
+      return cmsInitPromise;
     }
 
     function setStatus(message, isError) {
@@ -261,6 +263,7 @@
     // Always show login form first to avoid stale-session blank screen issues.
 
     document.getElementById('admin-login-btn').addEventListener('click', async () => {
+      const loginBtn = document.getElementById('admin-login-btn');
       const passcode = document.getElementById('admin-passcode').value;
 
       if (!passcode || passcode.trim().length < 4) {
@@ -268,29 +271,32 @@
         return;
       }
 
+      loginBtn.disabled = true;
       setStatus('Checking access code...', false);
-      const response = await fetch('/api/admin-login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ passcode: passcode.trim() })
-      });
-
-      const result = await response.json();
-      if (!response.ok || !result.success) {
-        setStatus(result.error || 'Invalid access code.', true);
-        return;
-      }
-
-      localStorage.setItem(SESSION_KEY, JSON.stringify({
-        token: result.token,
-        expiresAt: Date.now() + Number(result.expiresInMs || 0)
-      }));
-
-      setStatus('Login successful. Loading admin panel...', false);
       try {
+        const response = await fetch('/api/admin-login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ passcode: passcode.trim() })
+        });
+
+        const result = await response.json();
+        if (!response.ok || !result.success) {
+          setStatus(result.error || 'Invalid access code.', true);
+          return;
+        }
+
+        localStorage.setItem(SESSION_KEY, JSON.stringify({
+          token: result.token,
+          expiresAt: Date.now() + Number(result.expiresInMs || 0)
+        }));
+
+        setStatus('Login successful. Loading admin panel...', false);
         await showCMS();
       } catch (error) {
         setStatus(error.message || 'Failed to load admin CMS.', true);
+      } finally {
+        loginBtn.disabled = false;
       }
     });
   </script>

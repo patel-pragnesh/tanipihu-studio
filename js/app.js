@@ -431,20 +431,6 @@ document.addEventListener('DOMContentLoaded', () => {
               Qty
               <input type="number" data-role="qty-input" min="${product.minOrderQty}" value="${product.minOrderQty}">
             </label>
-            <div class="order-meta-grid">
-              <label class="qty-field">
-                Need Date
-                <input type="date" data-role="delivery-date-input">
-              </label>
-              <label class="qty-field">
-                Need Time
-                <input type="time" data-role="delivery-time-input">
-              </label>
-            </div>
-            <label class="qty-field">
-              Note (optional)
-              <input type="text" data-role="delivery-note-input" placeholder="Name, custom text, special request">
-            </label>
             <div class="card-actions">
               <button class="btn-secondary" data-action="details" data-product-id="${product.id}">View Details</button>
               <button class="btn-buy" data-action="order" data-product-id="${product.id}">Order</button>
@@ -657,20 +643,6 @@ document.addEventListener('DOMContentLoaded', () => {
               Qty
               <input type="number" data-role="qty-input" min="${product.minOrderQty}" value="${product.minOrderQty}">
             </label>
-            <div class="order-meta-grid">
-              <label class="qty-field">
-                Need Date
-                <input type="date" data-role="delivery-date-input">
-              </label>
-              <label class="qty-field">
-                Need Time
-                <input type="time" data-role="delivery-time-input">
-              </label>
-            </div>
-            <label class="qty-field">
-              Note (optional)
-              <input type="text" data-role="delivery-note-input" placeholder="Any customization request">
-            </label>
             <div class="ai-actions">
               <button class="btn-secondary" data-action="ai-details" data-product-id="${product.id}">Details</button>
               <button class="btn-buy" data-action="ai-order" data-product-id="${product.id}">Order</button>
@@ -728,18 +700,12 @@ document.addEventListener('DOMContentLoaded', () => {
           <p><strong>Quality Note:</strong> ${product.qualityNote}</p>
 
           <div class="modal-order-details">
-            <div class="order-meta-grid">
-              <label class="qty-field">
-                Need Date
-                <input type="date" data-role="delivery-date-input">
-              </label>
-              <label class="qty-field">
-                Need Time
-                <input type="time" data-role="delivery-time-input">
-              </label>
-            </div>
             <label class="qty-field">
-              Note (optional)
+              Expected Delivery Date
+              <input type="date" data-role="delivery-date-input">
+            </label>
+            <label class="qty-field">
+              Custom Note (optional)
               <input type="text" data-role="delivery-note-input" placeholder="Name print, message card text, color preference...">
             </label>
           </div>
@@ -789,14 +755,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!container) {
       return {
         preferredDate: '',
-        preferredTime: '',
         note: ''
       };
     }
 
     return {
       preferredDate: container.querySelector('[data-role="delivery-date-input"]')?.value || '',
-      preferredTime: container.querySelector('[data-role="delivery-time-input"]')?.value || '',
       note: (container.querySelector('[data-role="delivery-note-input"]')?.value || '').trim()
     };
   }
@@ -820,7 +784,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const total = unitPrice * quantity;
     const bannerOffer = getBannerOfferForOrder(total);
     const preferredDate = formatDateForMessage(orderMeta.preferredDate || '');
-    const preferredTime = orderMeta.preferredTime || 'Not specified';
     const customerNote = orderMeta.note || 'No additional note';
 
     const lines = [
@@ -840,8 +803,7 @@ document.addEventListener('DOMContentLoaded', () => {
       `Personalization: ${product.personalizationAvailable ? 'Yes' : 'No'}`,
       `Lead Time: ${product.leadTimeDays} day(s)` ,
       `Min Order Qty: ${product.minOrderQty}`,
-      `Preferred Delivery Date: ${preferredDate}`,
-      `Preferred Delivery Time: ${preferredTime}`,
+      `Expected Delivery Date: ${preferredDate}`,
       `Image: ${getAbsoluteImageUrl(product)}`,
       `Coupon Code: ${bannerOffer ? bannerOffer.code : 'No code'}`,
       `Coupon Offer: ${bannerOffer ? bannerOffer.discountText : 'No global offer'}`,
