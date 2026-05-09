@@ -2,8 +2,8 @@
   "marketingBanner": {
     "enabled": true,
     "text": "Use Code WELCOME10 & Get 10% Off on Orders Above ₹599!",
-    "couponCode": "WELCOME10",
-    "discountText": "10% OFF",
-    "minOrderAmount": 599
+    "couponCode": "WELCOME12",
+    "discountText": "11% OFF",
+    "minOrderAmount": 1000
   }
 }
