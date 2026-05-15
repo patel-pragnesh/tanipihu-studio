@@ -3,7 +3,7 @@
     {
       "id": "book-lover-hamper",
       "category": "birthday",
-      "price": 111,
+      "price": 299,
       "isActive": true,
       "offerEnabled": false,
       "images": [
@@ -53,7 +53,7 @@
     {
       "id": "eco-bottle-hamper",
       "category": "eco-friendly",
-      "price": 299,
+      "price": 249,
       "isActive": true,
       "offerEnabled": false,
       "images": [
@@ -63,7 +63,7 @@
     {
       "id": "birds-hamper",
       "category": "eco-friendly",
-      "price": 499,
+      "price": 299,
       "isActive": true,
       "offerEnabled": false,
       "images": [
@@ -103,7 +103,7 @@
     {
       "id": "mandala-painting-kit",
       "category": "kids",
-      "price": 129,
+      "price": 99,
       "isActive": true,
       "offerEnabled": false,
       "images": [
