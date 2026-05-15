@@ -16,12 +16,20 @@
 
   <!-- Navigation -->
   <header class="nav">
-    <div class="logo">Tani Pihu <span>Treasure</span></div>
-    <div class="nav-links">
+    <a href="#top" class="logo" aria-label="Tani Pihu Treasure home">
+      <img src="images/TaniPihu.png" alt="Tani Pihu Treasure">
+    </a>
+    <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <div class="nav-links" id="site-nav">
       <a href="#collections">Collections</a>
       <a href="#ai-studio">AI Finder</a>
       <a href="#story">Our Story</a>
       <a href="https://www.instagram.com/tanipihutreasures" target="_blank" rel="noopener">Instagram</a>
+      <a href="vcard/">Digital Card</a>
       <a href="#contact" class="btn-primary">Custom Gifting</a>
     </div>
   </header>
@@ -81,7 +89,10 @@
   <section id="contact" class="cta-section">
     <h2>Need custom gifting?</h2>
     <p>We craft bespoke hampers for birthdays, return gifts, festive celebrations, and special events.</p>
-    <a href="https://wa.me/919726571954" class="btn-whatsapp" target="_blank" rel="noopener">Chat with us on WhatsApp</a>
+    <div class="cta-actions">
+      <a href="https://wa.me/919726571954" class="btn-whatsapp" target="_blank" rel="noopener">Chat with us on WhatsApp</a>
+      <a href="vcard/" class="btn-card-link">Open Digital Card</a>
+    </div>
     <p class="social-link">Instagram: <a href="https://www.instagram.com/tanipihutreasures" target="_blank" rel="noopener">@tanipihutreasures</a></p>
   </section>
 
@@ -170,6 +181,7 @@
   <div class="floating-actions" aria-label="Quick contact links">
     <a href="https://wa.me/919726571954" target="_blank" rel="noopener" class="floating-btn whatsapp-float">WhatsApp</a>
     <a href="https://www.instagram.com/tanipihutreasures" target="_blank" rel="noopener" class="floating-btn instagram-float">Instagram</a>
+    <a href="vcard/" class="floating-btn vcard-float">Digital Card</a>
   </div>
 
   <div id="product-modal" class="product-modal" aria-hidden="true">

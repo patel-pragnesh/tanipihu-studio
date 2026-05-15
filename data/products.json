@@ -169,6 +169,27 @@
       "women"
     ],
     "whatsappMessage": "Hi, I want to order Mother's Day Hamper."
+  },{
+    "id": "gift-for-him-birthday-hamper",
+    "name": "Gift for Him Birthday Hamper",
+    "slug": "gift-for-him-birthday-hamper",
+    "price": 999,
+    "category": "birthday",
+    "type": "hamper",
+    "featured": true,
+    "badge": "Gift for Him",
+    "description": "Birthday hamper for him with grooming essentials, chocolates, keepsake diary, and premium packaging.",
+    "shortDescription": "Thoughtful birthday hamper for him starting at Rs 999.",
+    "images": [
+      "images/BirthDayHamper.jpeg"
+    ],
+    "tags": [
+      "birthday",
+      "gift-for-him",
+      "hamper",
+      "men"
+    ],
+    "whatsappMessage": "Hi, I want to order the Gift for Him Birthday Hamper."
   },
   {
     "id": "women-selfcare-hamper",
@@ -188,6 +209,27 @@
       "special-occasion"
     ],
     "whatsappMessage": "Hi, I want to order Gift Hamper for Women."
+  },{
+    "id": "baby-shower-return-gift-hamper",
+    "name": "Baby Shower Return Gift Hamper",
+    "slug": "baby-shower-return-gift-hamper",
+    "price": 99,
+    "category": "return-gifts",
+    "type": "hamper",
+    "featured": true,
+    "badge": "Baby Shower",
+    "description": "Cute baby shower return gift hamper packed in a pink keepsake box for guests and celebrations.",
+    "shortDescription": "Sweet baby shower return hamper at Rs 99.",
+    "images": [
+      "images/Baby_showerreturn.jpeg"
+    ],
+    "tags": [
+      "baby-shower",
+      "return-gifts",
+      "hamper",
+      "pink"
+    ],
+    "whatsappMessage": "Hi, I want to order the Baby Shower Return Gift Hamper."
   },
   {
     "id": "scented-candle-return-gift",

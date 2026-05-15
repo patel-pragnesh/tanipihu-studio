@@ -58,23 +58,43 @@ a {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem 5%;
+  gap: 1rem;
+  padding: 0.85rem 5%;
   background-color: rgba(250, 248, 245, 0.95);
   position: sticky;
   top: 0;
   z-index: 100;
   border-bottom: 1px solid var(--accent-color);
+  transition: padding 0.22s ease, box-shadow 0.22s ease, background-color 0.22s ease;
 }
 
 .logo {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: var(--primary-color);
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  height: clamp(70px, 7vw, 96px);
 }
-.logo span {
-  font-weight: 400;
-  font-style: italic;
-  color: var(--secondary-color);
+
+.logo img {
+  display: block;
+  width: auto;
+  height: 100%;
+  transition: height 0.22s ease, transform 0.22s ease;
+}
+
+.nav.is-compact {
+  padding-top: 0.4rem;
+  padding-bottom: 0.4rem;
+  box-shadow: 0 10px 24px rgba(24, 33, 31, 0.08);
+  background-color: rgba(250, 248, 245, 0.98);
+}
+
+.nav.is-compact .logo {
+  height: clamp(50px, 5vw, 62px);
+}
+
+.nav.is-compact .nav-links a {
+  font-size: 0.9rem;
 }
 
 .nav-links {
@@ -92,6 +112,40 @@ a {
 }
 .nav-links a:hover {
   color: var(--primary-color);
+}
+
+.nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.28rem;
+  width: 2.85rem;
+  height: 2.85rem;
+  border: 1px solid rgba(123, 142, 115, 0.25);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.82);
+  cursor: pointer;
+}
+
+.nav-toggle span {
+  width: 1.1rem;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--text-dark);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.nav.is-open .nav-toggle span:first-child {
+  transform: translateY(6px) rotate(45deg);
+}
+
+.nav.is-open .nav-toggle span:nth-child(2) {
+  opacity: 0;
+}
+
+.nav.is-open .nav-toggle span:last-child {
+  transform: translateY(-6px) rotate(-45deg);
 }
 
 /* Buttons */
@@ -119,6 +173,23 @@ a {
 }
 .btn-whatsapp:hover {
   transform: translateY(-2px);
+}
+
+.btn-card-link {
+  background-color: transparent;
+  color: var(--text-dark);
+  padding: 0.8rem 2rem;
+  border-radius: 30px;
+  border: 1px solid var(--primary-color);
+  font-weight: 600;
+  display: inline-block;
+  transition: transform 0.2s, background-color 0.2s, color 0.2s;
+}
+
+.btn-card-link:hover {
+  transform: translateY(-2px);
+  background-color: var(--primary-color);
+  color: white;
 }
 
 /* Hero Section */
@@ -532,6 +603,13 @@ a {
   color: var(--text-dark);
 }
 
+.cta-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
 .social-link {
   margin-top: 1rem;
   margin-bottom: 0;
@@ -575,6 +653,10 @@ a {
 
 .instagram-float {
   background: #d62976;
+}
+
+.vcard-float {
+  background: #3d5a50;
 }
 
 /* Modal */
@@ -681,20 +763,44 @@ a {
 }
 
 /* Mobile responsive */
-@media (max-width: 768px) {
-  .nav { flex-direction: column; gap: 1rem; padding: 1rem 4%; }
-  .logo { font-size: 1.6rem; text-align: center; }
+@media (max-width: 900px) {
+  .nav {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 0.65rem 4%;
+  }
+  .logo {
+    height: clamp(56px, 10vw, 74px);
+  }
+  .nav.is-compact {
+    padding-top: 0.55rem;
+    padding-bottom: 0.55rem;
+  }
+  .nav.is-compact .logo {
+    height: clamp(46px, 8vw, 56px);
+  }
+  .nav-toggle {
+    display: inline-flex;
+    margin-left: auto;
+  }
   .nav-links {
+    display: none;
     width: 100%;
-    display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.5rem;
+    padding-top: 0.25rem;
+    border-top: 1px solid rgba(209, 191, 174, 0.6);
+  }
+  .nav.is-open .nav-links {
+    display: grid;
   }
   .nav-links a {
     text-align: center;
-    font-size: 0.95rem;
-    padding: 0.45rem 0.5rem;
-    border-radius: 10px;
+    font-size: 0.92rem;
+    padding: 0.6rem 0.55rem;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.76);
+    border: 1px solid rgba(209, 191, 174, 0.6);
   }
   .nav-links .btn-primary {
     grid-column: 1 / -1;
@@ -719,6 +825,7 @@ a {
   .modal-layout { grid-template-columns: 1fr; }
   .modal-actions { grid-template-columns: 1fr; }
   .order-meta-grid { grid-template-columns: 1fr; }
+  .cta-actions { flex-direction: column; align-items: stretch; }
   .floating-actions { right: 0.7rem; bottom: 0.7rem; }
   .floating-btn { padding: 0.58rem 0.85rem; font-size: 0.86rem; }
 }

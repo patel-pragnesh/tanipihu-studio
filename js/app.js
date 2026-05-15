@@ -11,6 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const modal = document.getElementById('product-modal');
   const modalContent = document.getElementById('modal-content');
   const modalCloseBtn = document.getElementById('modal-close-btn');
+  const nav = document.querySelector('.nav');
+  const navToggle = document.getElementById('nav-toggle');
+  const navLinks = document.getElementById('site-nav');
 
   const state = {
     allProducts: [],
@@ -194,6 +197,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (aiPackageBtn) {
     aiPackageBtn.addEventListener('click', generateCompletePackage);
+  }
+
+  if (nav && navToggle && navLinks) {
+    navToggle.addEventListener('click', () => {
+      const isOpen = nav.classList.toggle('is-open');
+      navToggle.setAttribute('aria-expanded', String(isOpen));
+      navToggle.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+    });
+
+    navLinks.addEventListener('click', event => {
+      if (event.target.closest('a') && window.innerWidth <= 900) {
+        nav.classList.remove('is-open');
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.setAttribute('aria-label', 'Open menu');
+      }
+    });
+  }
+
+  if (nav) {
+    const updateCompactNav = () => {
+      nav.classList.toggle('is-compact', window.scrollY > 56);
+    };
+
+    updateCompactNav();
+    window.addEventListener('scroll', updateCompactNav, { passive: true });
   }
 
   productGrid.addEventListener('click', event => {
